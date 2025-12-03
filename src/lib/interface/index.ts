@@ -1,0 +1,1 @@
+export type { CollectionShape } from './collection.shape';
