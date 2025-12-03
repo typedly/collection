@@ -16,9 +16,11 @@ A **TypeScript** type definitions package for data collections with customizable
 
 ## Features
 
-- **Constructor**: The constructor type for initialization.
+- **Constructor**: The constructor type for initialization with custom storage (e.g. `Set`, `Array`).
 - **Shape**: The shape of element-based collection built on @typedly/data.
-- **Customizable storage**: Customizable storage (Set, Array) with add/remove/iterate.
+- **Customizable Storage**: Support for various storage types (`Set<T>`, `T[]`, etc.) via generics with add/remove/iterate.
+- **Iteration & Symbols**: Built-in `[Symbol.iterator]` for spread/for-of, with `[Symbol.toStringTag]` for debugging.
+- **TypeScript-Only**: Zero runtime, pure type definitions for type-safe collections.
 
 ## Table of contents
 
