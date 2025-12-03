@@ -133,7 +133,13 @@ export class AnyCollection<T, V = Set<T>> implements CollectionShape<T, V> {
   }
 }
 
-const anyCollection = new AnyCollection<{age: number}, WeakSet<{}>>([], WeakSet).add({age: 27}).add({age: 37}).add({age: 47});
+const obj1 = {age: 27};
+const obj2 = {age: 37};
+const obj3 = {age: 47};
+const anyCollection = new AnyCollection<{age: number}, WeakSet<{age: number}>>([], WeakSet)
+  .add(obj1)
+  .add(obj2)
+  .add(obj3);
 ```
 
 ### Type
