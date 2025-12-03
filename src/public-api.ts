@@ -2,6 +2,9 @@
  * Public API Surface of collection
  */
 
-export {
-  
+export type {
+  // Interface.
+  CollectionShape,
+  // Constructor.
+  CollectionConstructor
 } from './lib';
