@@ -62,11 +62,11 @@ export class AnyCollection<T, V = Set<T>> implements CollectionShape<T, V> {
     return (this.#items as any).size;
   }
 
-  [Symbol.toStringTag](): string {
+  get [Symbol.toStringTag](): string {
     return 'MyCollection';
   }
 
-  [Symbol.iterator](): Iterator<T> {
+  get [Symbol.iterator](): Iterator<T> {
     return (this.#items as any).values();
   }
 }
