@@ -47,11 +47,11 @@ export interface CollectionShape<T, V = any> extends DataShape<V> {
    * @description Returns a tag name for collection.
    * @returns {string} 
    */
-  [Symbol.toStringTag](): string;
+  get [Symbol.toStringTag](): string;
 
   /**
    * @description Returns an iterator for the collection.
    * @returns {Iterator<T>} 
    */
-  [Symbol.iterator](): Iterator<T>;
+  get [Symbol.iterator](): Iterator<T>;
 }
