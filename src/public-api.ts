@@ -4,6 +4,7 @@
 
 export type {
   // Interface.
+  CollectionAdapter,
   CollectionShape,
   // Constructor.
   CollectionConstructor

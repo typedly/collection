@@ -1,2 +1,4 @@
-export type { CollectionShape } from './interface';
+// Interface.
+export type { CollectionShape, CollectionAdapter } from './interface';
+// Type.
 export type { CollectionConstructor } from './type';
