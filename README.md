@@ -16,6 +16,7 @@ A **TypeScript** type definitions package for data collections with customizable
 
 ## Features
 
+- **Adapter**: The default interface for adapters in collections.
 - **Constructor**: The constructor type for initialization with custom storage (e.g. `Set`, `Array`).
 - **Shape**: The shape of element-based collection built on @typedly/data.
 - **Customizable Storage**: Support for various storage types (`Set<T>`, `T[]`, etc.) via generics with add/remove/iterate.
@@ -27,6 +28,7 @@ A **TypeScript** type definitions package for data collections with customizable
 - [Installation](#installation)
 - [Api](#api)
   - Interface
+    - [`CollectionAdapter`](#collectionadapter)
     - [`CollectionShape`](#collectionshape)
   - Type
     - [`CollectionConstructor`](#collectionconstructor)
@@ -49,6 +51,7 @@ npm install @typedly/collection --save-peer
 ```typescript
 import {
   // Interface.
+  CollectionAdapter,
   CollectionShape,
   // Type.
   CollectionConstructor
@@ -56,6 +59,14 @@ import {
 ```
 
 ### Interface
+
+### `CollectionAdapter`
+
+The adapter interface for collections.
+
+```typescript
+import { CollectionAdapter } from '@typedly/collection';
+```
 
 ### `CollectionShape`
 
