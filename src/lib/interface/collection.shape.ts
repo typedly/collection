@@ -11,17 +11,17 @@ import { DataShape } from '@typedly/data';
 export interface CollectionShape<T, V = any> extends DataShape<V> {
   /**
    * @description Adds an item to the collection.
-   * @param {T} element Element of type `T` to add.
+   * @param {...T[]} element Element of type `T` to add.
    * @returns {this} The collection instance.
    */
-  add(element: T): this;
+  add(...element: T[]): this;
 
   /**
    * @description Deletes an item from the collection.
-   * @param {T} element Element of type `T` to delete.
+   * @param {...T[]} element Element of type `T` to delete.
    * @returns {boolean} `true` if the element was successfully deleted, otherwise `false`.
    */
-  delete(element: T): boolean;
+  delete(...element: T[]): boolean;
 
   /**
    * @description Executes a provided function once for each collection element.
@@ -31,11 +31,11 @@ export interface CollectionShape<T, V = any> extends DataShape<V> {
   forEach(callbackfn: (element: T, element2: T, collection: CollectionShape<T, V>) => void, thisArg?: any): void;
 
   /**
-   * @description Checks if an item exists in the collection.
-   * @param {T} element Element of type `T` to check for existence.
+   * @description Checks if every item exists in the collection.
+   * @param {...T[]} element Element of type `T` to check for existence.
    * @returns {boolean} `true` if the element exists, otherwise `false`.
    */
-  has(element: T): boolean;
+  has(...element: T[]): boolean;
 
   /**
    * @description The number of items in the collection.
@@ -53,5 +53,5 @@ export interface CollectionShape<T, V = any> extends DataShape<V> {
    * @description Returns an iterator for the collection.
    * @returns {Iterator<T>} 
    */
-  get [Symbol.iterator](): Iterator<T>;
+  [Symbol.iterator](): Iterator<T>;
 }
