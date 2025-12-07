@@ -10,14 +10,14 @@ import { DataShape } from '@typedly/data';
  */
 export interface CollectionShape<T, V = any> extends DataShape<V> {
   /**
-   * @description Adds an item to the collection.
+   * @description Adds elements to the collection.
    * @param {...T[]} element Element of type `T` to add.
    * @returns {this} The collection instance.
    */
   add(...element: T[]): this;
 
   /**
-   * @description Deletes an item from the collection.
+   * @description Deletes elements from the collection.
    * @param {...T[]} element Element of type `T` to delete.
    * @returns {boolean} `true` if the element was successfully deleted, otherwise `false`.
    */
