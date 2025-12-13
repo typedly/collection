@@ -5,12 +5,18 @@ import { ConstrainedConstructor } from "@typedly/constructor";
 /**
  * @description The constructor type for CollectionShape.
  * @export
- * @template T The type of the elements in the collection.
- * @template V The type of the value in the collection, data of elements.
- * @template {CollectionShape<T, V>} C 
+ * @template E The type of the elements in the collection.
+ * @template T The type of the value in the collection, data of elements.
+ * @template {boolean} [R=false] The `boolean` type to determine async methods.
+ * @template {CollectionShape<E, T, R>} [C=CollectionShape<E, T, R>] 
  */
-export type CollectionConstructor<T, V, C extends CollectionShape<T, V>> = ConstrainedConstructor<
-  CollectionShape<T, V>,
+export type CollectionConstructor<
+  E,
+  T,
+  R extends boolean = false,
+  C extends CollectionShape<E, T, R> = CollectionShape<E, T, R>
+> = ConstrainedConstructor<
+  CollectionShape<E, T, R>,
   C,
-  T[]
+  E[]
 >;

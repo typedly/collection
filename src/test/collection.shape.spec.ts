@@ -1,6 +1,10 @@
+import { IterValue } from '@typedly/data';
 import { CollectionShape } from '../lib';
 
-export class AnyCollection<T, V = Set<T>> implements CollectionShape<T, V> {
+export class AnyCollection<
+  T,
+  V = Set<T>
+> implements CollectionShape<T, V, false> {
   // Data shape method.
   get value(): V {
     // Implementation depends on specific requirements.
@@ -48,10 +52,11 @@ export class AnyCollection<T, V = Set<T>> implements CollectionShape<T, V> {
     return (this.#items as any).delete(element);
   }
 
-  forEach(callbackfn: (element: T, element2: T, collection: CollectionShape<T, V>) => void, thisArg?: any): void {
+  forEach(callbackfn: (element: T, element2: T, collection: CollectionShape<T, V, false>) => void, thisArg?: any): this {
     (this.#items as any).forEach((value: T) => {
       callbackfn.call(thisArg, value, value, this);
     });
+    return this;
   }
 
   has(element: T): boolean {
@@ -66,7 +71,7 @@ export class AnyCollection<T, V = Set<T>> implements CollectionShape<T, V> {
     return 'MyCollection';
   }
 
-  get [Symbol.iterator](): Iterator<T> {
+  [Symbol.iterator](): IterableIterator<IterValue<V>> {
     return (this.#items as any).values();
   }
 }
@@ -78,3 +83,6 @@ const anyCollection = new AnyCollection<{age: number}, WeakSet<{age: number}>>([
   .add(obj1)
   .add(obj2)
   .add(obj3);
+
+type VOfAnyCollection = typeof anyCollection extends CollectionShape<any, infer V, any> ? V : never;
+type IterOfAnyCollection = IterValue<VOfAnyCollection>;
