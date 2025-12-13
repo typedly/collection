@@ -1,57 +1,46 @@
 // Interface.
-import { DataShape } from '@typedly/data';
+import { AsyncReturn, DataShape } from '@typedly/data';
 /**
  * @description Represents a collection of elements.
  * @export
  * @interface Collection
- * @template T The type of elements in the collection.
- * @template V The type of the value in the collection, data of elements.
- * @extends {DataShape<V>}
+ * @template E The type of elements in the collection.
+ * @template [T=any] The type of the value in the collection, data of elements.
+ * @template {boolean} [R=false] The `boolean` type to determine async methods.
+ * @extends {DataShape<T, R>}
  */
-export interface CollectionShape<T, V = any> extends DataShape<V> {
+export interface CollectionShape<E, T = any, R extends boolean = false> extends DataShape<T, R> {
   /**
    * @description Adds elements to the collection.
-   * @param {...T[]} element Element of type `T` to add.
-   * @returns {this} The collection instance.
+   * @param {...E[]} element Element of type `T` to add.
+   * @returns {AsyncReturn<R, this>} The collection instance `this`, or in `Promise`.
    */
-  add(...element: T[]): this;
+  add(...element: E[]): AsyncReturn<R, this>;
 
   /**
    * @description Deletes elements from the collection.
-   * @param {...T[]} element Element of type `T` to delete.
-   * @returns {boolean} `true` if the element was successfully deleted, otherwise `false`.
+   * @param {...E[]} element Element of type `T` to delete.
+   * @returns {AsyncReturn<R, boolean>} `true` if the element was successfully deleted, otherwise `false`.
    */
-  delete(...element: T[]): boolean;
+  delete(...element: E[]): AsyncReturn<R, boolean>;
 
   /**
    * @description Executes a provided function once for each collection element.
-   * @param {(value: T, value2: T, collection: CollectionShape<T, V>) => void} callbackfn Function to execute for each element.
-   * @param {any} [thisArg] Value to use as `this` when executing `callbackfn`.
+   * @param {(value: E, value2: E, collection: CollectionShape<E, T, R>) => void} callbackfn Function to execute for each element.
+   * @param {AsyncReturn<R, this>} [thisArg] Value to use as `this` when executing `callbackfn`.
    */
-  forEach(callbackfn: (element: T, element2: T, collection: CollectionShape<T, V>) => void, thisArg?: any): void;
+  forEach(callbackfn: (element: E, element2: E, collection: CollectionShape<E, T, R>) => void, thisArg?: any): AsyncReturn<R, this>;
 
   /**
    * @description Checks if every item exists in the collection.
-   * @param {...T[]} element Element of type `T` to check for existence.
-   * @returns {boolean} `true` if the element exists, otherwise `false`.
+   * @param {...E[]} element Element of type `T` to check for existence.
+   * @returns {AsyncReturn<R, boolean>} `true` if the element exists, otherwise `false`.
    */
-  has(...element: T[]): boolean;
+  has(...element: E[]): AsyncReturn<R, boolean>;
 
   /**
    * @description The number of items in the collection.
    * @returns {number}
    */
   readonly size: number;
-
-  /**
-   * @description Returns a tag name for collection.
-   * @returns {string} 
-   */
-  get [Symbol.toStringTag](): string;
-
-  /**
-   * @description Returns an iterator for the collection.
-   * @returns {Iterator<T>} 
-   */
-  [Symbol.iterator](): Iterator<T>;
 }
