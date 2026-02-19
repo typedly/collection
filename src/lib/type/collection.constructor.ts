@@ -14,9 +14,10 @@ export type CollectionConstructor<
   E,
   T,
   R extends boolean = false,
+  G extends { async?: R, value?: T } = { async?: R, value?: T },
   C extends CollectionShape<E, T, R> = CollectionShape<E, T, R>
 > = ConstrainedConstructor<
   CollectionShape<E, T, R>,
   C,
-  E[]
+  [G, ...E[]]
 >;
