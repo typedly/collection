@@ -6,15 +6,15 @@ import { CollectionAdapter } from "./collection.adapter";
  * @interface CollectionAdapterConstructor
  * @template E Elements type.
  * @template {boolean} [R=false] The boolean type indicates the async methods.
- * @template {C} [C={async: R}] The configuration object type for the constructor, which has an `async` property of type `R`.
- * @template {CollectionAdapter<E, any, R>} [A=CollectionAdapter<E, any, R>] 
+ * @template {C} [C={async?: R, value?: T}] The configuration object type for the constructor, which has an `async` property of type `R` and an optional `value` property of type `T`.
+ * @template {CollectionAdapter<E, T, R>} [A=CollectionAdapter<E, T, R>] 
  */
 export interface CollectionAdapterConstructor<
   E,
   T,
   R extends boolean = false,
-  C extends { async: R} = { async: R },
+  C extends { async?: R, value?: T } = { async?: R, value?: T },
   A extends CollectionAdapter<E, T, R> = CollectionAdapter<E, T, R>
 > {
-  new ({async}: C, ...elements: E[]): A;
+  new ({async, value}: C, ...elements: E[]): A;
 }
