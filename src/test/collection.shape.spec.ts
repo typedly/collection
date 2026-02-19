@@ -1,7 +1,7 @@
 import { IterValue } from '@typedly/data';
 import { CollectionShape } from '../lib';
 
-
+// Example class implementing CollectionShape.
 export class AnyCollection<
   E,
   T = Set<E>

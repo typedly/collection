@@ -1,9 +1,6 @@
 import { CollectionAdapter, CollectionAdapterConstructor } from "../lib";
 import { AsyncReturn } from '@typedly/data';
-
-
 /**
- * 
  * Example class with fake async returned types.
  */
 export class ExampleCollectionAdapter<
@@ -75,6 +72,7 @@ export class ExampleCollectionAdapter<
   }
 }
 
+// Create factory function for creating adapter instances.
 function createAdapter<
   E,
   T,
