@@ -9,7 +9,24 @@ import { AsyncReturn, DataShape } from '@typedly/data';
  * @template {boolean} [R=false] The `boolean` type to determine async methods.
  * @extends {DataShape<T, R>}
  */
-export interface CollectionShape<E, T = any, R extends boolean = false> extends DataShape<T, R> {
+export interface CollectionShape<
+  E,
+  T = any,
+  R extends boolean = false
+> extends DataShape<T, R> {
+  /**
+   * @description Indicates whether the collection operates in asynchronous mode.
+   * @readonly
+   * @type {R}
+   */
+  readonly async: R;
+
+  /**
+   * @description The number of items in the collection.
+   * @returns {number}
+   */
+  readonly size: number;
+
   /**
    * @description Adds elements to the collection.
    * @param {...E[]} element Element of type `T` to add.
@@ -37,10 +54,4 @@ export interface CollectionShape<E, T = any, R extends boolean = false> extends 
    * @returns {AsyncReturn<R, boolean>} `true` if the element exists, otherwise `false`.
    */
   has(...element: E[]): AsyncReturn<R, boolean>;
-
-  /**
-   * @description The number of items in the collection.
-   * @returns {number}
-   */
-  readonly size: number;
 }
