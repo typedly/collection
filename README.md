@@ -72,6 +72,8 @@ import { CollectionAdapter } from '@typedly/collection';
 
 ### `CollectionAdapterConstructor`
 
+The interface of adapter constructor.
+
 ```typescript
 import { CollectionAdapter, CollectionAdapterConstructor } from '@typedly/collection';
 import { AsyncReturn } from '@typedly/data';
@@ -169,6 +171,8 @@ const adapter2 = createAdapter(ExampleCollectionAdapter, true, 'a', 'b', 'c');
 ```
 
 ### `CollectionShape`
+
+Represents a collection of elements.
 
 ```typescript
 import { CollectionShape, IterValue } from '@typedly/collection';
@@ -299,10 +303,11 @@ If you find this package useful and would like to support its and general develo
 Support via:
 
 - [Stripe](https://donate.stripe.com/dR614hfDZcJE3wAcMM)
-- [Revolut](https://checkout.revolut.com/pay/048b10a3-0e10-42c8-a917-e3e9cb4c8e29)
+- ~~[Revolut](https://checkout.revolut.com/pay/048b10a3-0e10-42c8-a917-e3e9cb4c8e29)~~
 - [GitHub](https://github.com/sponsors/angular-package/sponsorships?sponsor=sciborrudnicki&tier_id=83618)
 - [DonorBox](https://donorbox.org/become-a-sponsor-to-the-angular-package?default_interval=o)
 - [Patreon](https://www.patreon.com/checkout/angularpackage?rid=0&fan_landing=true&view_as=public)
+- [4Fund](https://4fund.com/bruubs)
 
 or via Trust Wallet
 
