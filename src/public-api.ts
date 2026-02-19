@@ -7,5 +7,6 @@ export type {
   CollectionAdapter,
   CollectionShape,
   // Constructor.
+  CollectionAdapterConstructor,
   CollectionConstructor
 } from './lib';

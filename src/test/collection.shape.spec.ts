@@ -1,24 +1,30 @@
 import { IterValue } from '@typedly/data';
 import { CollectionShape } from '../lib';
 
+// Example class implementing CollectionShape.
 export class AnyCollection<
-  T,
-  V = Set<T>
-> implements CollectionShape<T, V, false> {
+  E,
+  T = Set<E>
+> implements CollectionShape<E, T, false> {
+  async = false as false;
+
   // Data shape method.
-  get value(): V {
+  get value(): T {
     // Implementation depends on specific requirements.
-    return {} as V;
+    return this.#items;
   }
 
   // Example internal storage.
-  #items: V = new Set<T>() as V;
+  #items: T;
 
-  constructor(initialItems?: T[], type: new (...args: any[]) => V = Set as any) {
-    this.#items = new type();
-    if (initialItems) {
-      initialItems.forEach(item => (this.#items as any).add(item));
-    }
+  constructor(
+    { async, value }: { async: false, value?: T },
+    type?: new (...args: any[]) => T,
+    ...elements: E[]
+  ) {
+    this.async = async;
+    this.#items = type ? new type() : value ? value : {} as T;
+    elements.forEach(element => (this.#items as any).add(element));
   }
 
   public clear(): this {
@@ -33,8 +39,13 @@ export class AnyCollection<
     // Implementation depends on specific requirements.
     return this;
   }
-  public set(value: V): this {
+  public getValue(): T {
     // Implementation depends on specific requirements.
+    return this.#items;
+  }
+  public setValue(value: T): this {
+    // Implementation depends on specific requirements.
+    this.#items = value;
     return this;
   }
   public unlock(): this {
@@ -43,23 +54,23 @@ export class AnyCollection<
   }
 
 
-  add(element: T): this {
+  add(element: E): this {
     (this.#items as any).add(element);
     return this;
   }
 
-  delete(element: T): boolean {
+  delete(element: E): boolean {
     return (this.#items as any).delete(element);
   }
 
-  forEach(callbackfn: (element: T, element2: T, collection: CollectionShape<T, V, false>) => void, thisArg?: any): this {
-    (this.#items as any).forEach((value: T) => {
+  forEach(callbackfn: (element: E, element2: E, collection: CollectionShape<E, T, false>) => void, thisArg?: any): this {
+    (this.#items as any).forEach((value: E) => {
       callbackfn.call(thisArg, value, value, this);
     });
     return this;
   }
 
-  has(element: T): boolean {
+  has(element: E): boolean {
     return (this.#items as any).has(element);
   }
 
@@ -71,7 +82,7 @@ export class AnyCollection<
     return 'MyCollection';
   }
 
-  [Symbol.iterator](): IterableIterator<IterValue<V>> {
+  [Symbol.iterator](): IterableIterator<IterValue<T>> {
     return (this.#items as any).values();
   }
 }
@@ -79,10 +90,33 @@ export class AnyCollection<
 const obj1 = {age: 27};
 const obj2 = {age: 37};
 const obj3 = {age: 47};
-const anyCollection = new AnyCollection<{age: number}, WeakSet<{age: number}>>([], WeakSet)
+const anyCollection1 = new AnyCollection<{age: number}, Set<{age: number}>>(
+  { async: false, value: new Set([{age: 27}, {age: 37}, {age: 47}]) }
+  )
   .add(obj1)
   .add(obj2)
   .add(obj3);
 
-type VOfAnyCollection = typeof anyCollection extends CollectionShape<any, infer V, any> ? V : never;
+console.log(`anyCollection1:`, anyCollection1.value);
+
+const anyCollection2 = new AnyCollection<{age: number}, Set<{age: number}>>(
+  { async: false }, Set)
+  .add(obj1)
+  .add(obj2)
+  .add(obj3);
+
+console.log(`anyCollection2:`, anyCollection2.value);
+
+type VOfAnyCollection = typeof anyCollection1 extends CollectionShape<any, infer V, any> ? V : never;
 type IterOfAnyCollection = IterValue<VOfAnyCollection>;
+
+
+describe('CollectionShape', () => {
+  it(``, () => {
+    expect(AnyCollection.prototype.add).toBeDefined();
+    expect(AnyCollection.prototype.delete).toBeDefined();
+    expect(AnyCollection.prototype.forEach).toBeDefined();
+    expect(AnyCollection.prototype.has).toBeDefined();
+  });
+});
+

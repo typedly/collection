@@ -29,6 +29,7 @@ A **TypeScript** type definitions package for data collections with customizable
 - [Api](#api)
   - Interface
     - [`CollectionAdapter`](#collectionadapter)
+    - [`CollectionAdapterConstructor`](#collectionadapterconstructor)
     - [`CollectionShape`](#collectionshape)
   - Type
     - [`CollectionConstructor`](#collectionconstructor)
@@ -52,6 +53,7 @@ npm install @typedly/collection --save-peer
 import {
   // Interface.
   CollectionAdapter,
+  CollectionAdapterConstructor,
   CollectionShape,
   // Type.
   CollectionConstructor
@@ -68,29 +70,137 @@ The adapter interface for collections.
 import { CollectionAdapter } from '@typedly/collection';
 ```
 
+### `CollectionAdapterConstructor`
+
+The interface of adapter constructor.
+
+```typescript
+import { CollectionAdapter, CollectionAdapterConstructor } from '@typedly/collection';
+import { AsyncReturn } from '@typedly/data';
+/**
+ * Example class with fake async returned types.
+ */
+export class ExampleCollectionAdapter<
+  E,
+  T,
+  R extends boolean = false, 
+> implements CollectionAdapter<E, T, R> {
+  public get async(): R {
+    return this.#async;
+  }
+  public get size(): number {
+    return this.#items.length;
+  }
+  public get  value(): T {
+    // Implementation depends on specific requirements.
+    return {} as T;
+  }
+  version = "1.0.0";
+  #async: R;
+  #items: E[] = [];
+  constructor({async}: {async: R}, ...elements: E[]) {
+    this.#async = async;
+    this.#items.push(...elements);
+  }
+  public add(...element: E[]): AsyncReturn<R, this> {
+    this.#items.push(...element);
+    return this as AsyncReturn<R, this>;
+  }
+  public clear(): AsyncReturn<R, this> {
+    this.#items = [];
+    return this as AsyncReturn<R, this>;
+  }
+  public delete(...element: E[]): AsyncReturn<R, boolean> {
+    const index = this.#items.indexOf(element[0]);
+    if (index !== -1) {
+      this.#items.splice(index, 1);
+      return true as AsyncReturn<R, boolean>;
+    }
+    return false as AsyncReturn<R, boolean>;
+  }
+  public destroy(): AsyncReturn<R, this> {
+    this.#items = [];
+    return this as AsyncReturn<R, this>;
+  }
+  public forEach(callbackfn: (element: E, element2: E, collection: CollectionAdapter<E, T, R>) => void, thisArg?: any): AsyncReturn<R, this> {
+    this.#items.forEach((value: E) => {
+      callbackfn.call(thisArg, value, value, this);
+    });
+    return this as AsyncReturn<R, this>;
+  }
+  public getValue(): AsyncReturn<R, T> {
+    // Implementation depends on specific requirements.
+    return {} as AsyncReturn<R, T>;
+  }
+  public has(element: E): AsyncReturn<R, boolean> {
+    return this.#items.includes(element) as AsyncReturn<R, boolean>;
+  }
+  public lock(): this {
+    // Implementation depends on specific requirements.
+    return this;
+  }
+  public setValue(value: T): AsyncReturn<R, this> {
+    // Implementation depends on specific requirements.
+    return this as AsyncReturn<R, this>;
+  }
+  public unlock(): AsyncReturn<R, this> {
+    // Implementation depends on specific requirements.
+    return this as AsyncReturn<R, this>;
+  }
+}
+
+// Create factory function for creating adapter instances.
+function createAdapter<
+  E,
+  T,
+  R extends boolean = false,
+  A extends CollectionAdapter<E, T, R> = CollectionAdapter<E, T, R>
+>(
+  AdapterCtor: CollectionAdapterConstructor<E, T, R, { async: R }, A>,
+  async: R,
+  ...elements: E[]
+): A {
+  return new AdapterCtor({ async }, ...elements);
+}
+
+// ExampleCollectionAdapter<number, unknown, false>
+const adapter1 = createAdapter(ExampleCollectionAdapter, false, 1, 2, 3);
+// ExampleCollectionAdapter<string, unknown, true>
+const adapter2 = createAdapter(ExampleCollectionAdapter, true, 'a', 'b', 'c');
+
+```
+
 ### `CollectionShape`
+
+Represents a collection of elements.
 
 ```typescript
 import { CollectionShape, IterValue } from '@typedly/collection';
 
+// Example class implementing CollectionShape.
 export class AnyCollection<
-  T,
-  V = Set<T>
-> implements CollectionShape<T, V, false> {
+  E,
+  T = Set<E>
+> implements CollectionShape<E, T, false> {
+  async = false as false;
+
   // Data shape method.
-  get value(): V {
+  get value(): T {
     // Implementation depends on specific requirements.
-    return {} as V;
+    return this.#items;
   }
 
   // Example internal storage.
-  #items: V = new Set<T>() as V;
+  #items: T;
 
-  constructor(initialItems?: T[], type: new (...args: any[]) => V = Set as any) {
-    this.#items = new type();
-    if (initialItems) {
-      initialItems.forEach(item => (this.#items as any).add(item));
-    }
+  constructor(
+    { async, value }: { async: false, value?: T },
+    type?: new (...args: any[]) => T,
+    ...elements: E[]
+  ) {
+    this.async = async;
+    this.#items = type ? new type() : value ? value : {} as T;
+    elements.forEach(element => (this.#items as any).add(element));
   }
 
   public clear(): this {
@@ -105,8 +215,13 @@ export class AnyCollection<
     // Implementation depends on specific requirements.
     return this;
   }
-  public set(value: V): this {
+  public getValue(): T {
     // Implementation depends on specific requirements.
+    return this.#items;
+  }
+  public setValue(value: T): this {
+    // Implementation depends on specific requirements.
+    this.#items = value;
     return this;
   }
   public unlock(): this {
@@ -115,23 +230,23 @@ export class AnyCollection<
   }
 
 
-  add(element: T): this {
+  add(element: E): this {
     (this.#items as any).add(element);
     return this;
   }
 
-  delete(element: T): boolean {
+  delete(element: E): boolean {
     return (this.#items as any).delete(element);
   }
 
-  forEach(callbackfn: (element: T, element2: T, collection: CollectionShape<T, V, false>) => void, thisArg?: any): this {
-    (this.#items as any).forEach((value: T) => {
+  forEach(callbackfn: (element: E, element2: E, collection: CollectionShape<E, T, false>) => void, thisArg?: any): this {
+    (this.#items as any).forEach((value: E) => {
       callbackfn.call(thisArg, value, value, this);
     });
     return this;
   }
 
-  has(element: T): boolean {
+  has(element: E): boolean {
     return (this.#items as any).has(element);
   }
 
@@ -143,7 +258,7 @@ export class AnyCollection<
     return 'MyCollection';
   }
 
-  [Symbol.iterator](): IterableIterator<IterValue<V>> {
+  [Symbol.iterator](): IterableIterator<IterValue<T>> {
     return (this.#items as any).values();
   }
 }
@@ -151,10 +266,22 @@ export class AnyCollection<
 const obj1 = {age: 27};
 const obj2 = {age: 37};
 const obj3 = {age: 47};
-const anyCollection = new AnyCollection<{age: number}, WeakSet<{age: number}>>([], WeakSet)
+const anyCollection1 = new AnyCollection<{age: number}, Set<{age: number}>>(
+  { async: false, value: new Set([{age: 27}, {age: 37}, {age: 47}]) }
+  )
   .add(obj1)
   .add(obj2)
   .add(obj3);
+
+console.log(`anyCollection1:`, anyCollection1.value);
+
+const anyCollection2 = new AnyCollection<{age: number}, Set<{age: number}>>(
+  { async: false }, Set)
+  .add(obj1)
+  .add(obj2)
+  .add(obj3);
+
+console.log(`anyCollection2:`, anyCollection2.value);
 ```
 
 ### Type
@@ -176,10 +303,11 @@ If you find this package useful and would like to support its and general develo
 Support via:
 
 - [Stripe](https://donate.stripe.com/dR614hfDZcJE3wAcMM)
-- [Revolut](https://checkout.revolut.com/pay/048b10a3-0e10-42c8-a917-e3e9cb4c8e29)
+- ~~[Revolut](https://checkout.revolut.com/pay/048b10a3-0e10-42c8-a917-e3e9cb4c8e29)~~
 - [GitHub](https://github.com/sponsors/angular-package/sponsorships?sponsor=sciborrudnicki&tier_id=83618)
 - [DonorBox](https://donorbox.org/become-a-sponsor-to-the-angular-package?default_interval=o)
 - [Patreon](https://www.patreon.com/checkout/angularpackage?rid=0&fan_landing=true&view_as=public)
+- [4Fund](https://4fund.com/bruubs)
 
 or via Trust Wallet
 

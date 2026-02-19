@@ -9,6 +9,10 @@ import { CollectionShape } from "./collection.shape";
  * @template R The `boolean` type to determine async methods.
  * @extends {CollectionShape<E, T>}
  */
-export interface CollectionAdapter<E, T, R extends boolean = false> extends CollectionShape<E, T, R> {
+export interface CollectionAdapter<
+  E,
+  T,
+  R extends boolean = false
+> extends CollectionShape<E, T, R> {
   version: string;
 }
