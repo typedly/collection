@@ -8,6 +8,7 @@ import { ConstrainedConstructor } from "@typedly/constructor";
  * @template E The type of the elements in the collection.
  * @template T The type of the value in the collection, data of elements.
  * @template {boolean} [R=false] The `boolean` type to determine async methods.
+ * @template {G} [G={async?: R, value?: T}] The configuration object type for the constructor, which has an `async` property of type `R` and an optional `value` property of type `T`.
  * @template {CollectionShape<E, T, R>} [C=CollectionShape<E, T, R>] 
  */
 export type CollectionConstructor<
