@@ -1,5 +1,6 @@
 // Interface.
 import { AsyncReturn, DataShape } from '@typedly/data';
+import { CollectionSettings } from './collection.settings';
 /**
  * @description Represents a collection of elements.
  * @export
@@ -20,6 +21,13 @@ export interface CollectionShape<
    * @type {R}
    */
   readonly async: R;
+
+  /**
+   * @description The configuration settings of the collection.
+   * @readonly
+   * @type {?CollectionSettings<E, T, R>}
+   */
+  readonly configuration?: CollectionSettings<E, T, R>;
 
   /**
    * @description The number of items in the collection.
@@ -54,4 +62,24 @@ export interface CollectionShape<
    * @returns {AsyncReturn<R, boolean>} `true` if the element exists, otherwise `false`.
    */
   has(...element: E[]): AsyncReturn<R, boolean>;
+
+  /**
+   * @description Sets the asynchronous mode of the collection.
+   * @param {R} async The boolean type to determine async methods.
+   * @returns {this} The collection instance `this`.
+   */
+  setAsync?(async: R): this;
+
+  /**
+   * @description Converts the collection to an array of elements.
+   * @returns {AsyncReturn<R, E[]>} The array of elements, or in `Promise` if `R` is `true`.
+   */
+  toArray?(): AsyncReturn<R, E[]>;
+
+  /**
+   * @description
+   * @param {R} async 
+   * @returns {CollectionShape<E, T, R>} 
+   */
+  with?(async: R): CollectionShape<E, T, R>;
 }
