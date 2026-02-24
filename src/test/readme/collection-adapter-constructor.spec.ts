@@ -1,4 +1,4 @@
-import { CollectionAdapter, CollectionAdapterConstructor } from "../lib";
+import { CollectionAdapter, CollectionAdapterConstructor } from '../../public-api';
 import { AsyncReturn } from '@typedly/data';
 /**
  * Example class with fake async returned types.
@@ -15,14 +15,13 @@ export class ExampleCollectionAdapter<
     return this.#items.length;
   }
   public get  value(): T {
-    // Implementation depends on specific requirements.
-    return {} as T;
+    return this.#items as T;
   }
   version = "1.0.0";
   #async: R;
   #items: E[] = [];
-  constructor({async}: {async: R}, ...elements: E[]) {
-    this.#async = async;
+  constructor(...elements: E[]) {
+    this.#async = false as R;
     this.#items.push(...elements);
   }
   public add(...element: E[]): AsyncReturn<R, this> {
@@ -52,22 +51,19 @@ export class ExampleCollectionAdapter<
     return this as AsyncReturn<R, this>;
   }
   public getValue(): AsyncReturn<R, T> {
-    // Implementation depends on specific requirements.
-    return {} as AsyncReturn<R, T>;
+    return this.#items as AsyncReturn<R, T>;
   }
   public has(element: E): AsyncReturn<R, boolean> {
     return this.#items.includes(element) as AsyncReturn<R, boolean>;
   }
   public lock(): this {
-    // Implementation depends on specific requirements.
     return this;
   }
   public setValue(value: T): AsyncReturn<R, this> {
-    // Implementation depends on specific requirements.
+    this.#items = value as unknown as E[];
     return this as AsyncReturn<R, this>;
   }
   public unlock(): AsyncReturn<R, this> {
-    // Implementation depends on specific requirements.
     return this as AsyncReturn<R, this>;
   }
 }
@@ -79,14 +75,13 @@ function createAdapter<
   R extends boolean = false,
   A extends CollectionAdapter<E, T, R> = CollectionAdapter<E, T, R>
 >(
-  AdapterCtor: CollectionAdapterConstructor<E, T, R, { async: R }, A>,
-  async: R,
+  AdapterCtor: CollectionAdapterConstructor<E, T, R, A>,
   ...elements: E[]
 ): A {
-  return new AdapterCtor({ async }, ...elements);
+  return new AdapterCtor(...elements);
 }
 
 // ExampleCollectionAdapter<number, unknown, false>
-const adapter1 = createAdapter(ExampleCollectionAdapter, false, 1, 2, 3);
+const adapter1 = createAdapter(ExampleCollectionAdapter, 1, 2, 3);
 // ExampleCollectionAdapter<string, unknown, true>
-const adapter2 = createAdapter(ExampleCollectionAdapter, true, 'a', 'b', 'c');
+const adapter2 = createAdapter(ExampleCollectionAdapter, 'a', 'b', 'c');

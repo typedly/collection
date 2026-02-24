@@ -82,6 +82,10 @@ export class AnyCollection<
     return 'MyCollection';
   }
 
+  with(async: false): CollectionShape<E, T, false> {
+    return new AnyCollection<E, T>({ async, value: this.#items });
+  }
+
   [Symbol.iterator](): IterableIterator<IterValue<T>> {
     return (this.#items as any).values();
   }

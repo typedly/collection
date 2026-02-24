@@ -27,12 +27,15 @@ A **TypeScript** type definitions package for data collections with customizable
 
 - [Installation](#installation)
 - [Api](#api)
-  - Interface
-    - [`CollectionAdapter`](#collectionadapter)
+  - Constructor
     - [`CollectionAdapterConstructor`](#collectionadapterconstructor)
-    - [`CollectionShape`](#collectionshape)
-  - Type
     - [`CollectionConstructor`](#collectionconstructor)
+    - [`ConfigurableCollectionAdapterConstructor`](#configurablecollectionadapterconstructor)
+    - [`ConfigurableCollectionConstructor`](#configurablecollectionconstructor)
+  - Main
+    - [`CollectionAdapter`](#collectionadapter)
+    - [`CollectionSettings`](#collectionsettings)
+    - [`CollectionShape`](#collectionshape)
 - [Contributing](#contributing)
 - [Support](#support)
 - [Code of Conduct](#code-of-conduct)
@@ -51,24 +54,20 @@ npm install @typedly/collection --save-peer
 
 ```typescript
 import {
+  // Constructor.
+  CollectionAdapterConstructor,
+  CollectionConstructor,
+  ConfigurableCollectionAdapterConstructor,
   // Interface.
   CollectionAdapter,
-  CollectionAdapterConstructor,
+  CollectionSettings,
   CollectionShape,
-  // Type.
-  CollectionConstructor
 } from '@typedly/collection';
 ```
 
 ### Interface
 
-### `CollectionAdapter`
-
-The adapter interface for collections.
-
-```typescript
-import { CollectionAdapter } from '@typedly/collection';
-```
+### Constructor
 
 ### `CollectionAdapterConstructor`
 
@@ -92,14 +91,13 @@ export class ExampleCollectionAdapter<
     return this.#items.length;
   }
   public get  value(): T {
-    // Implementation depends on specific requirements.
-    return {} as T;
+    return this.#items as T;
   }
   version = "1.0.0";
   #async: R;
   #items: E[] = [];
-  constructor({async}: {async: R}, ...elements: E[]) {
-    this.#async = async;
+  constructor(...elements: E[]) {
+    this.#async = false as R;
     this.#items.push(...elements);
   }
   public add(...element: E[]): AsyncReturn<R, this> {
@@ -129,22 +127,19 @@ export class ExampleCollectionAdapter<
     return this as AsyncReturn<R, this>;
   }
   public getValue(): AsyncReturn<R, T> {
-    // Implementation depends on specific requirements.
-    return {} as AsyncReturn<R, T>;
+    return this.#items as AsyncReturn<R, T>;
   }
   public has(element: E): AsyncReturn<R, boolean> {
     return this.#items.includes(element) as AsyncReturn<R, boolean>;
   }
   public lock(): this {
-    // Implementation depends on specific requirements.
     return this;
   }
   public setValue(value: T): AsyncReturn<R, this> {
-    // Implementation depends on specific requirements.
+    this.#items = value as unknown as E[];
     return this as AsyncReturn<R, this>;
   }
   public unlock(): AsyncReturn<R, this> {
-    // Implementation depends on specific requirements.
     return this as AsyncReturn<R, this>;
   }
 }
@@ -156,18 +151,52 @@ function createAdapter<
   R extends boolean = false,
   A extends CollectionAdapter<E, T, R> = CollectionAdapter<E, T, R>
 >(
-  AdapterCtor: CollectionAdapterConstructor<E, T, R, { async: R }, A>,
-  async: R,
+  AdapterCtor: CollectionAdapterConstructor<E, T, R, A>,
   ...elements: E[]
 ): A {
-  return new AdapterCtor({ async }, ...elements);
+  return new AdapterCtor(...elements);
 }
 
 // ExampleCollectionAdapter<number, unknown, false>
-const adapter1 = createAdapter(ExampleCollectionAdapter, false, 1, 2, 3);
+const adapter1 = createAdapter(ExampleCollectionAdapter, 1, 2, 3);
 // ExampleCollectionAdapter<string, unknown, true>
-const adapter2 = createAdapter(ExampleCollectionAdapter, true, 'a', 'b', 'c');
+const adapter2 = createAdapter(ExampleCollectionAdapter, 'a', 'b', 'c');
+```
 
+### `CollectionConstructor`
+
+```typescript
+import { CollectionConstructor } from '@typedly/collection';
+```
+
+### `ConfigurableCollectionAdapterConstructor`
+
+```typescript
+import { ConfigurableCollectionAdapterConstructor } from '@typedly/collection';
+```
+
+### `ConfigurableCollectionConstructor`
+
+```typescript
+import { ConfigurableCollectionConstructor } from '@typedly/collection';
+```
+
+### Main
+
+### `CollectionAdapter`
+
+The adapter interface for collections.
+
+```typescript
+import { CollectionAdapter } from '@typedly/collection';
+```
+
+### `CollectionSettings`
+
+Represents the settings for a collection.
+
+```typescript
+import { CollectionSettings } from '@typedly/collection';
 ```
 
 ### `CollectionShape`
@@ -182,15 +211,12 @@ export class AnyCollection<
   E,
   T = Set<E>
 > implements CollectionShape<E, T, false> {
+  get size(): number { return (this.#items as any).size; }
+  get value(): T { return this.#items; }
+  get [Symbol.toStringTag](): string { return 'AnyCollection'; }
+
   async = false as false;
 
-  // Data shape method.
-  get value(): T {
-    // Implementation depends on specific requirements.
-    return this.#items;
-  }
-
-  // Example internal storage.
   #items: T;
 
   constructor(
@@ -203,61 +229,19 @@ export class AnyCollection<
     elements.forEach(element => (this.#items as any).add(element));
   }
 
-  public clear(): this {
-    // Implementation depends on specific requirements.
-    return this;
-  }
-  public destroy(): this {
-    // Implementation depends on specific requirements.
-    return this;
-  }
-  public lock(): this {
-    // Implementation depends on specific requirements.
-    return this;
-  }
-  public getValue(): T {
-    // Implementation depends on specific requirements.
-    return this.#items;
-  }
-  public setValue(value: T): this {
-    // Implementation depends on specific requirements.
-    this.#items = value;
-    return this;
-  }
-  public unlock(): this {
-    // Implementation depends on specific requirements.
-    return this;
-  }
-
-
-  add(element: E): this {
-    (this.#items as any).add(element);
-    return this;
-  }
-
-  delete(element: E): boolean {
-    return (this.#items as any).delete(element);
-  }
-
+  add(element: E): this { (this.#items as any).add(element); return this; }
+  clear(): this { return this; }
+  delete(element: E): boolean { return (this.#items as any).delete(element); }
+  destroy(): this { return this; }
   forEach(callbackfn: (element: E, element2: E, collection: CollectionShape<E, T, false>) => void, thisArg?: any): this {
-    (this.#items as any).forEach((value: E) => {
-      callbackfn.call(thisArg, value, value, this);
-    });
+    (this.#items as any).forEach((value: E) => callbackfn.call(thisArg, value, value, this));
     return this;
   }
-
-  has(element: E): boolean {
-    return (this.#items as any).has(element);
-  }
-
-  get size(): number {
-    return (this.#items as any).size;
-  }
-
-  get [Symbol.toStringTag](): string {
-    return 'MyCollection';
-  }
-
+  has(element: E): boolean { return (this.#items as any).has(element); }
+  lock(): this { return this; }
+  getValue(): T { return this.#items; }
+  setValue(value: T): this { this.#items = value; return this; }
+  unlock(): this { return this; }
   [Symbol.iterator](): IterableIterator<IterValue<T>> {
     return (this.#items as any).values();
   }
@@ -284,14 +268,6 @@ const anyCollection2 = new AnyCollection<{age: number}, Set<{age: number}>>(
 console.log(`anyCollection2:`, anyCollection2.value);
 ```
 
-### Type
-
-### `CollectionConstructor`
-
-```typescript
-import { CollectionConstructor } from '@typedly/collection';
-```
-
 ## Contributing
 
 Your contributions are valued! If you'd like to contribute, please feel free to submit a pull request. Help is always appreciated.
@@ -308,6 +284,7 @@ Support via:
 - [DonorBox](https://donorbox.org/become-a-sponsor-to-the-angular-package?default_interval=o)
 - [Patreon](https://www.patreon.com/checkout/angularpackage?rid=0&fan_landing=true&view_as=public)
 - [4Fund](https://4fund.com/bruubs)
+- [PayPal](https://paypal.me/sterblack)
 
 or via Trust Wallet
 
