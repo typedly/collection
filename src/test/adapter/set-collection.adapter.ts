@@ -1,4 +1,4 @@
-import { AsyncReturn } from '@typedly/data';
+import { AsyncReturn, IterValue } from '@typedly/data';
 import { CollectionAdapter } from "../../lib";
 
 export class SetCollectionAdapter<
@@ -69,5 +69,9 @@ export class SetCollectionAdapter<
   public unlock(): AsyncReturn<R, this> {
     // Implementation depends on specific requirements.
     return this as AsyncReturn<R, this>;
+  }
+
+  [Symbol.iterator](): IterableIterator<IterValue<T>> {
+    return this.#items[Symbol.iterator]() as IterableIterator<IterValue<T>>;
   }
 }
