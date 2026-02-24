@@ -90,8 +90,7 @@ export class ExampleCollectionAdapter<
     return this.#items.length;
   }
   public get  value(): T {
-    // Implementation depends on specific requirements.
-    return {} as T;
+    return this.#items as T;
   }
   version = "1.0.0";
   #async: R;
@@ -127,22 +126,19 @@ export class ExampleCollectionAdapter<
     return this as AsyncReturn<R, this>;
   }
   public getValue(): AsyncReturn<R, T> {
-    // Implementation depends on specific requirements.
-    return {} as AsyncReturn<R, T>;
+    return this.#items as AsyncReturn<R, T>;
   }
   public has(element: E): AsyncReturn<R, boolean> {
     return this.#items.includes(element) as AsyncReturn<R, boolean>;
   }
   public lock(): this {
-    // Implementation depends on specific requirements.
     return this;
   }
   public setValue(value: T): AsyncReturn<R, this> {
-    // Implementation depends on specific requirements.
+    this.#items = value as unknown as E[];
     return this as AsyncReturn<R, this>;
   }
   public unlock(): AsyncReturn<R, this> {
-    // Implementation depends on specific requirements.
     return this as AsyncReturn<R, this>;
   }
 }
@@ -208,15 +204,12 @@ export class AnyCollection<
   E,
   T = Set<E>
 > implements CollectionShape<E, T, false> {
+  get size(): number { return (this.#items as any).size; }
+  get value(): T { return this.#items; }
+  get [Symbol.toStringTag](): string { return 'AnyCollection'; }
+
   async = false as false;
 
-  // Data shape method.
-  get value(): T {
-    // Implementation depends on specific requirements.
-    return this.#items;
-  }
-
-  // Example internal storage.
   #items: T;
 
   constructor(
@@ -229,61 +222,19 @@ export class AnyCollection<
     elements.forEach(element => (this.#items as any).add(element));
   }
 
-  public clear(): this {
-    // Implementation depends on specific requirements.
-    return this;
-  }
-  public destroy(): this {
-    // Implementation depends on specific requirements.
-    return this;
-  }
-  public lock(): this {
-    // Implementation depends on specific requirements.
-    return this;
-  }
-  public getValue(): T {
-    // Implementation depends on specific requirements.
-    return this.#items;
-  }
-  public setValue(value: T): this {
-    // Implementation depends on specific requirements.
-    this.#items = value;
-    return this;
-  }
-  public unlock(): this {
-    // Implementation depends on specific requirements.
-    return this;
-  }
-
-
-  add(element: E): this {
-    (this.#items as any).add(element);
-    return this;
-  }
-
-  delete(element: E): boolean {
-    return (this.#items as any).delete(element);
-  }
-
+  add(element: E): this { (this.#items as any).add(element); return this; }
+  clear(): this { return this; }
+  delete(element: E): boolean { return (this.#items as any).delete(element); }
+  destroy(): this { return this; }
   forEach(callbackfn: (element: E, element2: E, collection: CollectionShape<E, T, false>) => void, thisArg?: any): this {
-    (this.#items as any).forEach((value: E) => {
-      callbackfn.call(thisArg, value, value, this);
-    });
+    (this.#items as any).forEach((value: E) => callbackfn.call(thisArg, value, value, this));
     return this;
   }
-
-  has(element: E): boolean {
-    return (this.#items as any).has(element);
-  }
-
-  get size(): number {
-    return (this.#items as any).size;
-  }
-
-  get [Symbol.toStringTag](): string {
-    return 'MyCollection';
-  }
-
+  has(element: E): boolean { return (this.#items as any).has(element); }
+  lock(): this { return this; }
+  getValue(): T { return this.#items; }
+  setValue(value: T): this { this.#items = value; return this; }
+  unlock(): this { return this; }
   [Symbol.iterator](): IterableIterator<IterValue<T>> {
     return (this.#items as any).values();
   }
