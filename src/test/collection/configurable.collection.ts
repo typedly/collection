@@ -9,7 +9,7 @@ export class ConfigurableCollection<
   A extends CollectionAdapter<E, T, R>,
   const C extends CollectionSettings<E, T, any>,
   E = A extends CollectionAdapter<infer E, any, any> ? E : unknown,
-  T = C['value'] extends undefined | unknown ? A extends CollectionAdapter<unknown, infer T, any> ? T : unknown : C['value'],
+  T = C['value'] extends undefined | unknown ? A extends CollectionAdapter<any, infer T, any> ? T : unknown : C['value'],
   R extends boolean = C['async'] extends boolean ? C['async'] : A extends CollectionAdapter<E, any, infer R> ? R : false,
 > extends CollectionBase<E, T, R, A> {
   constructor(

@@ -1,9 +1,10 @@
-import { AsyncReturn, IterValue } from '@typedly/data';
-import { CollectionShape } from '../lib';
+import { AsyncReturn, IterValue } from "@typedly/data";
+
+import { CollectionShape } from "../../lib";
 
 export class TypedCollection<
   E,
-  T,
+  T extends Iterable<E>,
   R extends boolean
 > implements CollectionShape<E, T, R> {
   public get [Symbol.toStringTag](): string {
@@ -24,17 +25,16 @@ export class TypedCollection<
 
   #async: R;
   #value: T;
-  #type: new (...args: E[]) => T;
+  #type: new (...args: any[]) => T;
 
   constructor(
     async: R,
-    type: new (...args: E[]) => T,
+    type: new (...args: any[]) => T,
     ...elements: E[]
   ) {
     this.#async = async;
     this.#type = type;
-    this.#value = new type(...elements);
-    elements.forEach(element => (this.#value as any).add(element));
+    this.#value = new type(elements);
   }
 
   public add(element: E): AsyncReturn<R, this> {
@@ -86,6 +86,6 @@ export class TypedCollection<
   }
 
   [Symbol.iterator](): IterableIterator<IterValue<T>> {
-    return (this.#value as any).values();
+    return this.#value[Symbol.iterator]() as IterableIterator<IterValue<T>>;
   }
 }
