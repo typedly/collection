@@ -31,6 +31,7 @@ A **TypeScript** type definitions package for data collections with customizable
     - [`CollectionAdapterConstructor`](#collectionadapterconstructor)
     - [`CollectionConstructor`](#collectionconstructor)
     - [`ConfigurableCollectionAdapterConstructor`](#configurablecollectionadapterconstructor)
+    - [`ConfigurableCollectionConstructor`](#configurablecollectionconstructor)
   - Main
     - [`CollectionAdapter`](#collectionadapter)
     - [`CollectionSettings`](#collectionsettings)
@@ -172,6 +173,12 @@ import { CollectionConstructor } from '@typedly/collection';
 
 ```typescript
 import { ConfigurableCollectionAdapterConstructor } from '@typedly/collection';
+```
+
+### `ConfigurableCollectionConstructor`
+
+```typescript
+import { ConfigurableCollectionConstructor } from '@typedly/collection';
 ```
 
 ### Main
