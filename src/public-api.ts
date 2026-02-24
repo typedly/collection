@@ -9,6 +9,6 @@ export type {
 export type {
   // Interface.
   CollectionAdapter,
-  CollectionShape,
   CollectionSettings,
+  CollectionShape,
 } from './lib';
