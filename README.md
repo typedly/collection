@@ -58,6 +58,7 @@ import {
   CollectionAdapterConstructor,
   CollectionConstructor,
   ConfigurableCollectionAdapterConstructor,
+  ConfigurableCollectionConstructor,
   // Interface.
   CollectionAdapter,
   CollectionSettings,

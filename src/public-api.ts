@@ -5,6 +5,7 @@ export type {
   CollectionAdapterConstructor,
   CollectionConstructor,
   ConfigurableCollectionAdapterConstructor,
+  ConfigurableCollectionConstructor,
 } from './constructor';
 export type {
   // Interface.
