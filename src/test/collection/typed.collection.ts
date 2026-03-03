@@ -1,12 +1,12 @@
 import { AsyncReturn, IterValue } from "@typedly/data";
 
-import { CollectionShape } from "../../lib";
+import { CollectionSettings, CollectionShape } from "../../lib";
 
 export class TypedCollection<
   E,
   T extends Iterable<E>,
   R extends boolean
-> implements CollectionShape<E, T, R> {
+> implements CollectionShape<{async: R}, E, T, R> {
   public get [Symbol.toStringTag](): string {
     return 'TypedCollection';
   }
@@ -77,9 +77,9 @@ export class TypedCollection<
     return this as AsyncReturn<R, this>;
   }
 
-  public with<Async extends R>(async: Async): TypedCollection<E, T, Async> {
-    return new TypedCollection<E, T, Async>(
-      async,
+  public with<NR extends R>(settings: {async: NR}): TypedCollection<E, T, NR> {
+    return new TypedCollection<E, T, NR>(
+      settings.async,
       this.#type,
       ...(this.#value as any)
     );
@@ -89,3 +89,88 @@ export class TypedCollection<
     return this.#value[Symbol.iterator]() as IterableIterator<IterValue<T>>;
   }
 }
+
+
+export class Collection<
+  C extends CollectionSettings<E, T, R> = CollectionSettings<any, any, any>,
+  T = C extends CollectionSettings<any, infer T, any> ? T : any,
+  E = T extends Set<infer U> | Array<infer U> | Map<infer U, any>
+      ? U
+      : any,
+  R extends boolean = C extends CollectionSettings<E, T, infer R> ? R : false
+> implements CollectionShape<C, E, T, R> {
+  get value(): T {
+    return this.#value;
+  }
+  readonly async: R;
+  readonly configuration?: C;
+  readonly size: number;
+  #value: T;
+
+  constructor(
+    settings: C,
+    // value?: T,
+    ...elements: E[]
+  ) {
+    this.#value = settings.value as T;
+    this.async = settings.async as R;
+    this.configuration = settings;
+    this.size = 0; // Initialize size to 0 or calculate based on settings
+  }
+
+  getValue(): AsyncReturn<R, T> {
+    return this.#value as AsyncReturn<R, T>;
+  }
+  setValue(value: T): AsyncReturn<R, this> {
+    this.#value = value;
+    return this as AsyncReturn<R, this>;
+  }
+
+  lock() {
+    return this;
+  }
+
+  clear() {
+    // Implementation to clean up resources used by the collection
+    return this as AsyncReturn<R, this>;
+  }
+
+  destroy() {
+    // Implementation to clean up resources used by the collection
+    return this as AsyncReturn<R, this>;
+  }
+
+  add(...element: E[]): AsyncReturn<R, this> {
+    // Implementation to add elements to the collection
+    return this as AsyncReturn<R, this>;
+  }
+
+  delete(...element: E[]): AsyncReturn<R, boolean> {
+    // Implementation to delete elements from the collection
+    return false as AsyncReturn<R, boolean>;
+  }
+
+  forEach(callbackfn: (element: E, element2: E, collection: Collection<C, T, E, R>) => void, thisArg?: any): AsyncReturn<R, this> {
+    // Implementation to execute a function for each element in the collection
+    return this as AsyncReturn<R, this>;
+  }
+
+  has(...element: E[]): AsyncReturn<R, boolean> {
+    // Implementation to check if elements exist in the collection
+    return false as AsyncReturn<R, boolean>;
+  }
+
+  toArray?(): AsyncReturn<R, E[]> {
+    // Implementation to convert the collection to an array of elements
+    return [] as unknown as AsyncReturn<R, E[]>;
+  }
+
+  with<NC extends C>(settings: NC): Collection<NC, T, E, R> {
+    // Implementation to update the collection's configuration settings and return a new collection instance
+    // return new Collection(settings, this.#value, ...([] as E[]));
+    return new Collection(settings, ...([] as E[]));
+  }
+}
+
+
+const collection = new Collection({async: false}, 1, 2, 3);
