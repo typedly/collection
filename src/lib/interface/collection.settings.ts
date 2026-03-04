@@ -3,10 +3,10 @@
  * @export
  * @interface CollectionSettings
  * @template E The type of the elements in the collection.
- * @template T The type of the value in the collection.
+ * @template {Iterable<E>} T The type of the value in the collection.
  * @template {boolean} [R=false] The `boolean` type to determine async methods.
  */
-export interface CollectionSettings<E, T, R extends boolean = false> {
+export interface CollectionSettings<E, T extends Iterable<E>, R extends boolean = false> {
   /**
    * @description The asynchronous mode of the collection. If `true`, collection methods will return Promises.
    * @default false
