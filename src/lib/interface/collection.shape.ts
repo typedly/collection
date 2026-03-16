@@ -1,20 +1,37 @@
+import type { AsyncReturn, DataShape } from '@typedly/data';
 // Interface.
-import { DataShape } from '@typedly/data';
+import type { Collection as CollectionTrait } from '@typedly/data-traits';
 // Type.
-import { CollectionBaseShape } from './collection-base.shape';
+import type { IterableElement } from '@typedly/data';
 /**
  * @description The `CollectionShape` interface defines the structure and behavior of a collection data structure, which can be implemented by various types of collections such as sets, arrays, or maps.
  * It extends the `DataShape` interface, allowing it to inherit common data-related properties and methods while also introducing collection-specific functionalities.
  * @export
  * @interface CollectionShape
- * @template E The type of elements in the collection.
  * @template {Iterable<E>} T The iterable collection type.
- * @template {boolean} R The async behavior flag.
- * @extends {CollectionBaseShape<E, T, R>} The base collection functionalities defined in `CollectionBaseShape`.
- * @extends {DataShape<T, undefined, R>} The data-related functionalities defined in `DataShape`.
+ * @template [E=IterableElement<T>] The type of elements in the collection inferred from the `T` if possible.
+ * @template {boolean} [R=false] The async behavior flag.
+ * @extends {DataShape<T, R>} The data-related functionalities defined in `DataShape`.
+ * @extends {CollectionTrait<E, R>} The base collection functionalities defined in `CollectionTrait`.
  */
 export interface CollectionShape<
-  E,
   T extends Iterable<E>,
-  R extends boolean,
-> extends CollectionBaseShape<E, T, R>, DataShape<T, undefined, R> {}
+  E = IterableElement<T>,
+  R extends boolean = false,
+> extends DataShape<T, R>, CollectionTrait<E, R> {
+  /**
+   * @description Executes a provided function once for each collection element.
+   * @param {(element: E, collection: this) => void} callbackfn Function to execute for each element.
+   * @param {?*} [thisArg] Value to use as `this` when executing `callbackfn`.
+   * @returns {AsyncReturn<R, this>} 
+   */
+  forEach(callbackfn: (element: E, collection: this) => void, thisArg?: any): AsyncReturn<R, this>;
+
+  /**
+   * @description Returns an iterable of the values in the collection.
+   * The type of the values is determined by the generic type `T`, which represents the iterable collection type.
+   * If `T` is not provided, it defaults to `Iterable<unknown>`, and the values will be of type `unknown`.
+   * @returns {IterableIterator<IterableElement<T>>} 
+   */
+  [Symbol.iterator](): IterableIterator<IterableElement<T>>;
+}
