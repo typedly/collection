@@ -1,7 +1,7 @@
 // Interface.
 export type {
   AdaptableCollectionShape,
-  CollectionAdapter,
   CollectionSettings,
   CollectionShape,
+  ConfigurableCollectionShape,
 } from './interface';
