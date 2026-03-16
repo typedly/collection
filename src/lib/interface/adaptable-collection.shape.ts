@@ -1,5 +1,5 @@
 // Interface.
-import { AdaptableDataShape } from '@typedly/data';
+import { AdaptableDataShape } from '@typedly/adaptable-data';
 import { CollectionSettings } from './collection.settings';
 import { ConfigurableCollectionAdapter } from '../../adapter';
 import { ConfigurableCollectionShape } from './configurable-collection.shape';
@@ -19,21 +19,20 @@ import { InferAsync, InferCollectionType, InferElement } from '../../type';
  * @extends {AdaptableDataShape<A, T, C, R>} The adaptability functionalities defined in `AdaptableDataShape`, allowing the collection to adapt based on the adapter and settings.
  */
 export interface AdaptableCollectionShape<
-  A extends ConfigurableCollectionAdapter<C, E, T, R>,
-  C extends CollectionSettings<E, T, R>,
-  // E inferred as the element type from the adapter, or defaults to `any` if not specified.
-  E = InferElement<C, A>,
-  // T inferred as the collection type from the adapter, or defaults to `any` if not specified.
+  A extends ConfigurableCollectionAdapter<C, T, E, R>,
+  C extends CollectionSettings<T, E, R>,
   T extends Iterable<E> = InferCollectionType<C, A>,
-  // R inferred as the async behavior from the adapter, or defaults to `false` if not specified.
+  E = InferElement<C, A>,
   R extends boolean = InferAsync<C, A>
-> extends ConfigurableCollectionShape<C, E, T, R>, AdaptableDataShape<A, T, C, R> {
+> extends AdaptableDataShape<A, C, T, R>, ConfigurableCollectionShape<C, T, E, R> {
   /**
    * @description Updates the collection's configuration settings and returns a new collection instance with the updated settings.
    * @template {C} NC 
-   * @template {ConfigurableCollectionAdapter<NC, E, T, R>} NA 
+   * @template {ConfigurableCollectionAdapter<NC, T, E, R>} NA 
    * @param {NC} settings The new configuration settings for the collection.
-   * @returns {AdaptableCollectionShape<NA, NC, E, T, R>} 
+   * @returns {AdaptableCollectionShape<NA, NC, T, E, R>} 
    */
-  with?<NC extends C, NA extends ConfigurableCollectionAdapter<NC, E, T, R>>(settings: NC): AdaptableCollectionShape<NA, NC, E, T, R>;
+  with?<NC extends CollectionSettings<T, E, R>, NA extends ConfigurableCollectionAdapter<NC, T, E, R>>(
+    settings: Partial<NC>
+  ): AdaptableCollectionShape<NA, NC, T, E, R>;
 }
