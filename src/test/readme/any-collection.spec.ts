@@ -1,11 +1,11 @@
-import { IterValue } from "@typedly/data";
+import { IterableElement } from "@typedly/data";
 import { CollectionShape } from "../../public-api";
 
 // Example class implementing CollectionShape.
 export class AnyCollection<
   E,
-  T = Set<E>
-> implements CollectionShape<E, T, false> {
+  T extends Set<E> = Set<E>
+> implements CollectionShape<T, E, false> {
   async = false as false;
 
   // Data shape method.
@@ -53,7 +53,6 @@ export class AnyCollection<
     return this;
   }
 
-
   add(element: E): this {
     (this.#items as any).add(element);
     return this;
@@ -63,9 +62,9 @@ export class AnyCollection<
     return (this.#items as any).delete(element);
   }
 
-  forEach(callbackfn: (element: E, element2: E, collection: CollectionShape<E, T, false>) => void, thisArg?: any): this {
+  forEach(callbackfn: (element: E, collection: this) => void, thisArg?: any): this {
     (this.#items as any).forEach((value: E) => {
-      callbackfn.call(thisArg, value, value, this);
+      callbackfn.call(thisArg, value, this);
     });
     return this;
   }
@@ -82,7 +81,7 @@ export class AnyCollection<
     return 'MyCollection';
   }
 
-  [Symbol.iterator](): IterableIterator<IterValue<T>> {
+  [Symbol.iterator](): IterableIterator<IterableElement<T>> {
     return (this.#items as any).values();
   }
 }
@@ -90,7 +89,9 @@ export class AnyCollection<
 const obj1 = {age: 27};
 const obj2 = {age: 37};
 const obj3 = {age: 47};
-const anyCollection1 = new AnyCollection<{age: number}, Set<{age: number}>>(
+
+// const anyCollection1: AnyCollection<unknown, Set<{ age: number; }>>
+const anyCollection1 = new AnyCollection(
   { async: false, value: new Set([{age: 27}, {age: 37}, {age: 47}]) }
   )
   .add(obj1)
@@ -99,7 +100,8 @@ const anyCollection1 = new AnyCollection<{age: number}, Set<{age: number}>>(
 
 console.log(`anyCollection1:`, anyCollection1.value);
 
-const anyCollection2 = new AnyCollection<{age: number}, Set<{age: number}>>(
+// const anyCollection2: AnyCollection<unknown, Set<unknown>>
+const anyCollection2 = new AnyCollection(
   { async: false }, Set)
   .add(obj1)
   .add(obj2)

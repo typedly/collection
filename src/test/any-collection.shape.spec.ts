@@ -1,11 +1,13 @@
 import { IterValue } from '@typedly/data';
 import { CollectionShape } from '../lib';
 
+export type InferT<T extends Iterable<E>, E> = T extends Set<E> ? Set<E> : Iterable<E>;
+
 // Example class implementing CollectionShape.
 export class AnyCollection<
   E,
-  T = Set<E>
-> implements CollectionShape<E, T, false> {
+  T extends Iterable<E>
+> implements CollectionShape<T, E, false> {
   async = false as false;
 
   // Data shape method.
@@ -19,11 +21,11 @@ export class AnyCollection<
 
   constructor(
     { async, value }: { async: false, value?: T },
-    type?: new (...args: any[]) => T,
+    type?: new (args: any[]) => T,
     ...elements: E[]
   ) {
     this.async = async;
-    this.#items = type ? new type() : value ? value : {} as T;
+    this.#items = type ? new type(elements) : value ? value : {} as T;
     elements.forEach(element => (this.#items as any).add(element));
   }
 
@@ -63,9 +65,9 @@ export class AnyCollection<
     return (this.#items as any).delete(element);
   }
 
-  forEach(callbackfn: (element: E, element2: E, collection: CollectionShape<E, T, false>) => void, thisArg?: any): this {
+  forEach(callbackfn: (element: E, collection: this) => void, thisArg?: any): this {
     (this.#items as any).forEach((value: E) => {
-      callbackfn.call(thisArg, value, value, this);
+      callbackfn.call(thisArg, value, this);
     });
     return this;
   }
@@ -82,7 +84,7 @@ export class AnyCollection<
     return 'MyCollection';
   }
 
-  with(async: false): CollectionShape<E, T, false> {
+  with(async: false): CollectionShape<T, E, false> {
     return new AnyCollection<E, T>({ async, value: this.#items });
   }
 
@@ -94,17 +96,20 @@ export class AnyCollection<
 const obj1 = {age: 27};
 const obj2 = {age: 37};
 const obj3 = {age: 47};
-const anyCollection1 = new AnyCollection<{age: number}, Set<{age: number}>>(
+
+const anyCollection1 = new AnyCollection(
   { async: false, value: new Set([{age: 27}, {age: 37}, {age: 47}]) }
-  )
+)
   .add(obj1)
   .add(obj2)
   .add(obj3);
 
 console.log(`anyCollection1:`, anyCollection1.value);
 
-const anyCollection2 = new AnyCollection<{age: number}, Set<{age: number}>>(
-  { async: false }, Set)
+const anyCollection2 = new AnyCollection(
+  { async: false },
+  Set
+)
   .add(obj1)
   .add(obj2)
   .add(obj3);
@@ -114,7 +119,6 @@ console.log(`anyCollection2:`, anyCollection2.value);
 type VOfAnyCollection = typeof anyCollection1 extends CollectionShape<any, infer V, any> ? V : never;
 type IterOfAnyCollection = IterValue<VOfAnyCollection>;
 
-
 describe('CollectionShape', () => {
   it(``, () => {
     expect(AnyCollection.prototype.add).toBeDefined();
@@ -123,4 +127,3 @@ describe('CollectionShape', () => {
     expect(AnyCollection.prototype.has).toBeDefined();
   });
 });
-
