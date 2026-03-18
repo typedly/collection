@@ -3,7 +3,7 @@ import { CollectionShape } from "../../../lib";
 // Type.
 import { ConstrainedConstructor } from "@typedly/constructor";
 /**
- * @description The constructor type for CollectionShape.
+ * @description The constructor type for `CollectionShape`.
  * @export
  * @interface CollectionConstructor
  * @template {CollectionShape<T, E, R>} S The collection shape type.
