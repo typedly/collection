@@ -25,11 +25,11 @@ export class TypedCollection<
 
   #async: R;
   #value: T;
-  #type: new (...args: any[]) => T;
+  #type: new (args: any[]) => T;
 
   constructor(
     async: R,
-    type: new (...args: any[]) => T,
+    type: new (args: any[]) => T,
     ...elements: E[]
   ) {
     this.#async = async;
