@@ -1,5 +1,5 @@
 // Interface.
-import { CollectionSettings, CollectionShape } from "../lib";
+import { CollectionSettings, CollectionShape } from "../../lib";
 /**
  * @description Infer the async type from the collection settings or adapter.
  * @export
