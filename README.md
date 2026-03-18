@@ -125,7 +125,7 @@ import { CollectionAdapter } from '@typedly/collection';
 
 ### `ConfigurableCollectionAdapter`
 
-The `ConfigurableCollectionAdapter` interface defines a collection data structure that can be configured based on the provided settings.
+The `ConfigurableCollectionAdapter` interface defines a adapter collection data structure that can be configured based on the provided settings.
 
 ```typescript
 import { ConfigurableCollectionAdapter } from '@typedly/collection';
@@ -138,10 +138,12 @@ import { ConfigurableCollectionAdapter } from '@typedly/collection';
 The interface of adapter constructor.
 
 ```typescript
-import { CollectionAdapter, CollectionAdapterConstructor } from '@typedly/collection';
+import { CollectionAdapterConstructor } from '@typedly/collection';
 ```
 
 ### `CollectionConstructor`
+
+The constructor type for `CollectionShape`.
 
 ```typescript
 import { CollectionConstructor } from '@typedly/collection';
@@ -216,7 +218,7 @@ import { CollectionSettings } from '@typedly/collection';
 The `CollectionShape` interface defines the structure and behavior of a collection data structure, which can be implemented by various types of collections such as sets, arrays, or maps.
 
 ```typescript
-import { CollectionShape, IterValue } from '@typedly/collection';
+import { CollectionShape } from '@typedly/collection';
 ```
 
 ### `ConfigurableCollectionShape`
