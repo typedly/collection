@@ -4,7 +4,7 @@ import { CollectionSettings } from './collection.settings';
 import { ConfigurableCollectionAdapter } from '../../adapter';
 import { ConfigurableCollectionShape } from './configurable-collection.shape';
 // Type.
-import { InferAsync, InferCollectionType, InferElement } from '../../type';
+import { InferAsync, InferCollectionType, InferElement } from '../../inference';
 /**
  * @description The `AdaptableCollectionShape` interface defines a collection data structure that can adapt to different configurations and behaviors based on the provided adapter and settings.
  * It extends both the `CollectionShape` and `AdaptableDataShape` interfaces, allowing it to inherit collection-specific functionalities while also supporting adaptability through the adapter pattern.
