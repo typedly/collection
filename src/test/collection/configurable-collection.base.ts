@@ -1,15 +1,16 @@
-import { AsyncReturn } from '@typedly/data';
+import { AsyncReturn, IterableElement } from '@typedly/data';
 
-import { CollectionAdapter, CollectionSettings, CollectionShape } from "../../lib";
+import { CollectionAdapter } from '../../adapter';
+import { CollectionSettings, ConfigurableCollectionShape } from "../../lib";
 import { ConfigurableCollectionAdapterConstructor } from "../../constructor";
 
 export abstract class ConfigurableCollectionBase<
   E,
-  T,
+  T extends Iterable<E>,
   R extends boolean,
-  C extends CollectionSettings<E, T, R>,
-  A extends CollectionAdapter<E, T, R>
-> implements CollectionShape<E, T, R> {
+  C extends CollectionSettings<T, E, R>,
+  A extends CollectionAdapter<T, E, R>
+> implements ConfigurableCollectionShape<C, T, E, R> {
   public get adapter(): A {
     return this.#adapter;
   }
@@ -24,10 +25,9 @@ export abstract class ConfigurableCollectionBase<
   }
 
   #adapter: A;
-
   constructor(
     settings: C,
-    adapter: ConfigurableCollectionAdapterConstructor<E, T, C, A>,
+    adapter: ConfigurableCollectionAdapterConstructor<A, C, T, E, R>,
     ...elements: E[]
   ) {
     this.#adapter = new adapter(settings, ...elements);
@@ -52,8 +52,8 @@ export abstract class ConfigurableCollectionBase<
     this.#adapter.destroy();
     return this as AsyncReturn<R, this>;
   }
-  public forEach(callbackfn: (element: E, element2: E, collection: CollectionShape<E, T, R>) => void, thisArg?: any): AsyncReturn<R, this> {
-    this.#adapter.forEach(callbackfn);
+  public forEach(callbackfn: (element: E, collection: this) => void, thisArg?: any): AsyncReturn<R, this> {
+    this.#adapter.forEach((element, collection) => callbackfn(element, this), thisArg);
     return this as AsyncReturn<R, this>;
   }
 
@@ -69,5 +69,8 @@ export abstract class ConfigurableCollectionBase<
   }
   public lock(): this {
     return this;
+  }
+  [Symbol.iterator](): IterableIterator<IterableElement<T>> {
+    return this.#adapter[Symbol.iterator]();
   }
 }

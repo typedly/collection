@@ -1,18 +1,21 @@
-import { AsyncReturn } from '@typedly/data';
-
-import { CollectionAdapter, CollectionShape } from "../../lib";
+import { AsyncReturn, IterableElement } from '@typedly/data';
+// Shape.
+import { CollectionShape } from "../../lib";
+// Constructor.
 import { CollectionAdapterConstructor } from "../../constructor";
+// Adapter.
+import { CollectionAdapter } from '../../adapter';
 
 export abstract class CollectionBase<
   E,
-  T,
+  T extends Iterable<E>,
   R extends boolean,
-  A extends CollectionAdapter<E, T, R>
-> implements CollectionShape<E, T, R> {
+  A extends CollectionAdapter<T, E, R>
+> implements CollectionShape<T, E, R> {
   public get adapter(): A {
     return this.#adapter;
   }
-  public get adapterConstructor(): CollectionAdapterConstructor<E, T, R, A> {
+  public get adapterConstructor(): CollectionAdapterConstructor<A, E, T, R> {
     return this.#adapterConstructor;
   }
   public get async(): R {
@@ -26,10 +29,10 @@ export abstract class CollectionBase<
   }
 
   #adapter: A;
-  #adapterConstructor: CollectionAdapterConstructor<E, T, R, A>;
+  #adapterConstructor: CollectionAdapterConstructor<A, E, T, R>;
 
   constructor(
-    adapter: CollectionAdapterConstructor<E, T, R, A>,
+    adapter: CollectionAdapterConstructor<A, E, T, R>,
     ...elements: E[]
   ) {
     this.#adapter = new adapter(...elements);
@@ -55,8 +58,8 @@ export abstract class CollectionBase<
     this.#adapter.destroy();
     return this as AsyncReturn<R, this>;
   }
-  public forEach(callbackfn: (element: E, element2: E, collection: CollectionShape<E, T, R>) => void, thisArg?: any): AsyncReturn<R, this> {
-    this.#adapter.forEach(callbackfn);
+  public forEach(callbackfn: (element: E, collection: this) => void, thisArg?: any): AsyncReturn<R, this> {
+    this.#adapter.forEach((element, collection) => callbackfn(element, this), thisArg);
     return this as AsyncReturn<R, this>;
   }
   public getValue(): AsyncReturn<R, T> {
@@ -71,5 +74,8 @@ export abstract class CollectionBase<
   public setValue(value: T): AsyncReturn<R, this> {
     this.#adapter.setValue(value);
     return this as AsyncReturn<R, this>;
+  }
+  *[Symbol.iterator](): IterableIterator<IterableElement<T>> {
+    yield* this.#adapter[Symbol.iterator]() as IterableIterator<IterableElement<T>>;
   }
 }

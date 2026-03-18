@@ -1,4 +1,4 @@
-import { AsyncReturn, IterValue } from "@typedly/data";
+import { AsyncReturn, IterableElement, IterValue } from "@typedly/data";
 
 import { CollectionSettings, CollectionShape } from "../../lib";
 
@@ -6,7 +6,7 @@ export class TypedCollection<
   E,
   T extends Iterable<E>,
   R extends boolean
-> implements CollectionShape<{async: R}, E, T, R> {
+> implements CollectionShape<T, E, R> {
   public get [Symbol.toStringTag](): string {
     return 'TypedCollection';
   }
@@ -62,9 +62,9 @@ export class TypedCollection<
     return (this.#value as any).has(element);
   }
 
-  public forEach(callbackfn: (element: E, element2: E, collection: TypedCollection<E, T, R>) => void, thisArg?: any): AsyncReturn<R, this> {
+  public forEach(callbackfn: (element: E, collection: this) => void, thisArg?: any): AsyncReturn<R, this> {
     (this.#value as any).forEach((value: E) => {
-      callbackfn.call(thisArg, value, value, this);
+      callbackfn.call(thisArg, value, this);
     });
     return this as AsyncReturn<R, this>;
   }
@@ -92,13 +92,13 @@ export class TypedCollection<
 
 
 export class Collection<
-  C extends CollectionSettings<E, T, R> = CollectionSettings<any, any, any>,
-  T = C extends CollectionSettings<any, infer T, any> ? T : any,
+  C extends CollectionSettings<T, E, R>,
+  T extends Iterable<E>,
   E = T extends Set<infer U> | Array<infer U> | Map<infer U, any>
       ? U
       : any,
-  R extends boolean = C extends CollectionSettings<E, T, infer R> ? R : false
-> implements CollectionShape<C, E, T, R> {
+  R extends boolean = C extends CollectionSettings<T, E, infer R> ? R : false
+> implements CollectionShape<T, E, R> {
   get value(): T {
     return this.#value;
   }
@@ -150,7 +150,7 @@ export class Collection<
     return false as AsyncReturn<R, boolean>;
   }
 
-  forEach(callbackfn: (element: E, element2: E, collection: Collection<C, T, E, R>) => void, thisArg?: any): AsyncReturn<R, this> {
+  forEach(callbackfn: (element: E, collection: this) => void, thisArg?: any): AsyncReturn<R, this> {
     // Implementation to execute a function for each element in the collection
     return this as AsyncReturn<R, this>;
   }
@@ -169,6 +169,10 @@ export class Collection<
     // Implementation to update the collection's configuration settings and return a new collection instance
     // return new Collection(settings, this.#value, ...([] as E[]));
     return new Collection(settings, ...([] as E[]));
+  }
+
+  *[Symbol.iterator](): IterableIterator<IterableElement<T>> {
+    yield* this.#value[Symbol.iterator]() as IterableIterator<IterableElement<T>>;
   }
 }
 

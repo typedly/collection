@@ -1,11 +1,11 @@
-import { AsyncReturn } from '@typedly/data';
-import { CollectionAdapter } from "../../lib";
+import { AsyncReturn, IterValue } from '@typedly/data';
+import { CollectionAdapter } from "../../adapter";
 
 export class AsyncSetCollectionAdapter<
   E,
   T extends Set<E> = Set<E>,
   R extends boolean = true, 
-> implements CollectionAdapter<E, T, R> {
+> implements CollectionAdapter<T, E, R> {
   public get async(): R {
     return this.#async;
   }
@@ -46,9 +46,9 @@ export class AsyncSetCollectionAdapter<
     this.#items = new Set() as unknown as T;
     return this as AsyncReturn<R, this>;
   }
-  public forEach(callbackfn: (element: E, element2: E, collection: CollectionAdapter<E, T, R>) => void, thisArg?: any): AsyncReturn<R, this> {
+  public forEach(callbackfn: (element: E, collection: this) => void, thisArg?: any): AsyncReturn<R, this> {
     this.#items.forEach((value: E) => {
-      callbackfn.call(thisArg, value, value, this);
+      callbackfn.call(thisArg, value, this);
     });
     return this as AsyncReturn<R, this>;
   }
@@ -70,5 +70,9 @@ export class AsyncSetCollectionAdapter<
   public unlock(): AsyncReturn<R, this> {
     // Implementation depends on specific requirements.
     return this as AsyncReturn<R, this>;
+  }
+
+  [Symbol.iterator](): IterableIterator<IterValue<T>> {
+    return this.#items[Symbol.iterator]() as IterableIterator<IterValue<T>>;
   }
 }
