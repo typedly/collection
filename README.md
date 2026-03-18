@@ -35,7 +35,7 @@ A **TypeScript** type definitions package for data collections with customizable
 
 ## Table of contents
 
-- [Related packages](#relatedpackages)
+- [Related packages](#related-packages)
 - [Installation](#installation)
 - [Api](#api)
   - Adapter
@@ -103,7 +103,6 @@ import {
   InferElementFromSettings,
   InferElement,
 
-  // Interface.
   // Interface.
   AdaptableCollectionShape,
   CollectionSettings,
