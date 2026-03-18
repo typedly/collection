@@ -5,18 +5,20 @@ import { ConstrainedConstructor } from "@typedly/constructor";
 /**
  * @description The constructor type for CollectionShape.
  * @export
- * @template E The type of the elements in the collection.
- * @template T The type of the value in the collection, data of elements.
- * @template {boolean} [R=false] The boolean type indicates the async methods.
- * @template {CollectionShape<E, T, R>} [S=CollectionShape<E, T, R>] The collection shape type.
+ * @interface CollectionConstructor
+ * @template {CollectionShape<T, E, R>} S The collection shape type.
+ * @template {Iterable<E>} [T=S extends CollectionShape<infer U, any, any> ? U : unknown] The type of the elements in the collection, inferred from the collection shape or defaults to `unknown` if not specified.
+ * @template [E=S extends CollectionShape<any, infer U, any> ? U : unknown] The element type inferred from the collection shape or defaults to `unknown` if not specified.
+ * @template {boolean} [R=S extends CollectionShape<any, any, infer U> ? U : false] The async behavior flag inferred from the collection shape or defaults to `false` if not specified.
+ * @extends {ConstrainedConstructor<CollectionShape<T, E, R>, S, E[]>}
  */
 export interface CollectionConstructor<
-  E,
-  T,
-  R extends boolean = false,
-  S extends CollectionShape<E, T, R> = CollectionShape<E, T, R>
+  S extends CollectionShape<T, E, R>,
+  T extends Iterable<E> = S extends CollectionShape<infer U, any, any> ? U : unknown,
+  E = S extends CollectionShape<any, infer U, any> ? U : unknown,
+  R extends boolean = S extends CollectionShape<any, any, infer U> ? U : false,
 > extends ConstrainedConstructor<
-  CollectionShape<E, T, R>,
+  CollectionShape<T, E, R>,
   S,
-  [...E[]]
->{}
+  E[]
+> {}
