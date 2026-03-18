@@ -1,18 +1,24 @@
-import { CollectionAdapter, CollectionSettings } from "../../../lib";
+// Interface.
+import { CollectionSettings } from "../../../lib";
+import { ConfigurableCollectionAdapter } from "../../../adapter";
+// Type.
+import { InferAsync, InferCollectionType, InferElement } from "../../../inference";
 /**
- * @description The interface of adapter constructor with configurable async mode.
+ * @description 
  * @export
  * @interface ConfigurableCollectionAdapterConstructor
- * @template E Elements type of `T`.
- * @template T Value type under which the elements are stored.
- * @template {CollectionSettings<E, T, any>} [C=CollectionSettings<E, T, any>] 
- * @template {CollectionAdapter<E, T, C['async']>} [A=CollectionAdapter<E, T, C['async']>] 
+ * @template {ConfigurableCollectionAdapter<C, T, E, R>} A 
+ * @template {CollectionSettings<T, E, R>} [C=A extends ConfigurableCollectionAdapter<infer U, any, any, any> ? U : CollectionSettings<any, any, any>] 
+ * @template [E=InferElement<C, A>] 
+ * @template {Iterable<E>} [T=InferCollectionType<C, A>] 
+ * @template {boolean} [R=InferAsync<C, A>] 
  */
 export interface ConfigurableCollectionAdapterConstructor<
-  E,
-  T,
-  C extends CollectionSettings<E, T, any> = CollectionSettings<E, T, any>,
-  A extends CollectionAdapter<E, T, C['async']> = CollectionAdapter<E, T, C['async']>
+  A extends ConfigurableCollectionAdapter<C, T, E, R>,
+  C extends CollectionSettings<T, E, R> = A extends ConfigurableCollectionAdapter<infer U, any, any, any> ? U : CollectionSettings<any, any, any>,
+  T extends Iterable<E> = InferCollectionType<C, A>,
+  E = InferElement<C, A>,
+  R extends boolean = InferAsync<C, A>,
 > {
   new (settings: C, ...elements: E[]): A;
 }
