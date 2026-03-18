@@ -13,7 +13,6 @@ export type {
   ConfigurableCollectionAdapterConstructor,
 } from './constructor';
 export type {
-  InferAsync,
   InferCollectionType,
   InferElementFromSettings,
   InferElement,
