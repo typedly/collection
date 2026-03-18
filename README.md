@@ -1,16 +1,26 @@
 <a href="https://github.com/typescript-package">
   <img
     src="https://avatars.githubusercontent.com/u/189665258?s=150&u=712e292bae048947d1f7d2020d7d38875c40e63a&v=4"
-    title="@typedly/collection - A TypeScript type definitions package for data collection."
+    title="@typedly/collection - A TypeScript type definitions package for data collections with customizable storage."
   />
 </a>
 
 ## @typedly/collection
 
 <!-- npm badge -->
-[![npm version][typedly-npm-badge-svg]][typedly-npm-badge]
-[![GitHub issues][typedly-badge-issues]][typedly-issues]
-[![GitHub license][typedly-badge-license]][typedly-license]
+[![npm version][package-npm-badge-svg]][package-npm-badge]
+[![GitHub issues][package-badge-issues]][package-issues]
+[![GitHub license][package-badge-license]][package-license]
+
+<!-- GitHub badges -->
+[![GitHub issues][package-badge-issues]][package-issues]
+[![GitHub forks][package-badge-forks]][package-forks]
+[![GitHub stars][package-badge-stars]][package-stars]
+[![GitHub license][package-badge-license]][package-license]
+
+<!-- Sponsors -->
+[![GitHub Sponsors][github-badge-sponsor]][github-sponsor-link]
+[![Patreon Sponsors][patreon-badge]][patreon-link]
 
 A **TypeScript** type definitions package for data collections with customizable storage.
 
@@ -25,17 +35,22 @@ A **TypeScript** type definitions package for data collections with customizable
 
 ## Table of contents
 
+- [Related packages](#relatedpackages)
 - [Installation](#installation)
 - [Api](#api)
+  - Adapter
+    - [`CollectionAdapter`](#collectionadapter)
+    - [`ConfigurableCollectionAdapter`](#configurablecollectionadapter)
   - Constructor
     - [`CollectionAdapterConstructor`](#collectionadapterconstructor)
     - [`CollectionConstructor`](#collectionconstructor)
     - [`ConfigurableCollectionAdapterConstructor`](#configurablecollectionadapterconstructor)
     - [`ConfigurableCollectionConstructor`](#configurablecollectionconstructor)
   - Main
-    - [`CollectionAdapter`](#collectionadapter)
+    - [`AdaptableCollection`](#adaptablecollectionshape)
     - [`CollectionSettings`](#collectionsettings)
     - [`CollectionShape`](#collectionshape)
+    - [`ConfigurableCollectionShape`](#configurablecollectionshape)
 - [Contributing](#contributing)
 - [Support](#support)
 - [Code of Conduct](#code-of-conduct)
@@ -44,6 +59,22 @@ A **TypeScript** type definitions package for data collections with customizable
   - [Versioning](#versioning)
 - [License](#license)
 - [Packages](#packages)
+
+## Related packages
+
+### Peer dependencies
+
+- **[@typedly/adaptable-data](https://github.com/typedly/adaptable-data)**: A **TypeScript** type definitions package for configurable, composable, trait-driven adaptable data models with adapter support.
+- **[@typedly/configurable-data](https://github.com/typedly/configurable-data)**: A **TypeScript** type definitions package for configurable, composable, trait-driven data models.
+- **[@typedly/data-traits](https://github.com/typedly/data-traits)**: A **TypeScript** type definitions package for configurable data traits, providing various kinds of configurable data interfaces.
+- **[@typedly/data](https://github.com/typedly/data)**: A **TypeScript** type definitions for [`@typescript-package/data`](https://github.com/typedly/data).
+
+### General
+
+- **[@typedly/adaptable-data](https://github.com/typedly/adaptable-data)**: A **TypeScript** type definitions for data adapter.
+- **[@typedly/collection](https://github.com/typedly/collection)**: A **TypeScript** type definitions package for data collections with customizable storage.
+- **[@typescript-package/data](https://github.com/typescript-package/data)**: A lightweight **TypeScript** library for basic data management.
+- **[@typescript-package/collection](https://github.com/typescript-package/collection)**: A lightweight **TypeScript** library for data collection.
 
 ## Installation
 
@@ -55,18 +86,51 @@ npm install @typedly/collection --save-peer
 
 ```typescript
 import {
+  // Adapter.
+  CollectionAdapter,
+  ConfigurableCollectionAdapter,
+
   // Constructor.
+  AdaptableCollectionConstructor,
   CollectionAdapterConstructor,
   CollectionConstructor,
+  ConfigurableCollectionConstructor,
   ConfigurableCollectionAdapterConstructor,
+
+  // Inference.
+  InferAsync,
+  InferCollectionType,
+  InferElementFromSettings,
+  InferElement,
+
   // Interface.
-  CollectionAdapter,
+  // Interface.
+  AdaptableCollectionShape,
   CollectionSettings,
   CollectionShape,
+  ConfigurableCollectionShape,
 } from '@typedly/collection';
 ```
 
 ### Interface
+
+### Adapter
+
+### `CollectionAdapter`
+
+The adapter interface for collections.
+
+```typescript
+import { CollectionAdapter } from '@typedly/collection';
+```
+
+### `ConfigurableCollectionAdapter`
+
+The `ConfigurableCollectionAdapter` interface defines a collection data structure that can be configured based on the provided settings.
+
+```typescript
+import { ConfigurableCollectionAdapter } from '@typedly/collection';
+```
 
 ### Constructor
 
@@ -76,92 +140,6 @@ The interface of adapter constructor.
 
 ```typescript
 import { CollectionAdapter, CollectionAdapterConstructor } from '@typedly/collection';
-import { AsyncReturn } from '@typedly/data';
-/**
- * Example class with fake async returned types.
- */
-export class ExampleCollectionAdapter<
-  E,
-  T,
-  R extends boolean = false, 
-> implements CollectionAdapter<E, T, R> {
-  public get async(): R {
-    return this.#async;
-  }
-  public get size(): number {
-    return this.#items.length;
-  }
-  public get  value(): T {
-    return this.#items as T;
-  }
-  version = "1.0.0";
-  #async: R;
-  #items: E[] = [];
-  constructor(...elements: E[]) {
-    this.#async = false as R;
-    this.#items.push(...elements);
-  }
-  public add(...element: E[]): AsyncReturn<R, this> {
-    this.#items.push(...element);
-    return this as AsyncReturn<R, this>;
-  }
-  public clear(): AsyncReturn<R, this> {
-    this.#items = [];
-    return this as AsyncReturn<R, this>;
-  }
-  public delete(...element: E[]): AsyncReturn<R, boolean> {
-    const index = this.#items.indexOf(element[0]);
-    if (index !== -1) {
-      this.#items.splice(index, 1);
-      return true as AsyncReturn<R, boolean>;
-    }
-    return false as AsyncReturn<R, boolean>;
-  }
-  public destroy(): AsyncReturn<R, this> {
-    this.#items = [];
-    return this as AsyncReturn<R, this>;
-  }
-  public forEach(callbackfn: (element: E, element2: E, collection: CollectionAdapter<E, T, R>) => void, thisArg?: any): AsyncReturn<R, this> {
-    this.#items.forEach((value: E) => {
-      callbackfn.call(thisArg, value, value, this);
-    });
-    return this as AsyncReturn<R, this>;
-  }
-  public getValue(): AsyncReturn<R, T> {
-    return this.#items as AsyncReturn<R, T>;
-  }
-  public has(element: E): AsyncReturn<R, boolean> {
-    return this.#items.includes(element) as AsyncReturn<R, boolean>;
-  }
-  public lock(): this {
-    return this;
-  }
-  public setValue(value: T): AsyncReturn<R, this> {
-    this.#items = value as unknown as E[];
-    return this as AsyncReturn<R, this>;
-  }
-  public unlock(): AsyncReturn<R, this> {
-    return this as AsyncReturn<R, this>;
-  }
-}
-
-// Create factory function for creating adapter instances.
-function createAdapter<
-  E,
-  T,
-  R extends boolean = false,
-  A extends CollectionAdapter<E, T, R> = CollectionAdapter<E, T, R>
->(
-  AdapterCtor: CollectionAdapterConstructor<E, T, R, A>,
-  ...elements: E[]
-): A {
-  return new AdapterCtor(...elements);
-}
-
-// ExampleCollectionAdapter<number, unknown, false>
-const adapter1 = createAdapter(ExampleCollectionAdapter, 1, 2, 3);
-// ExampleCollectionAdapter<string, unknown, true>
-const adapter2 = createAdapter(ExampleCollectionAdapter, 'a', 'b', 'c');
 ```
 
 ### `CollectionConstructor`
@@ -182,14 +160,48 @@ import { ConfigurableCollectionAdapterConstructor } from '@typedly/collection';
 import { ConfigurableCollectionConstructor } from '@typedly/collection';
 ```
 
-### Main
+### Inference
 
-### `CollectionAdapter`
+### `InferAsync`
 
-The adapter interface for collections.
+Infer the async type from the collection settings or adapter.
 
 ```typescript
-import { CollectionAdapter } from '@typedly/collection';
+import { InferAsync } from '@typedly/collection';
+```
+
+### `InferCollectionType`
+
+Infer the collection type from the collection settings or adapter.
+
+```typescript
+import { InferCollectionType } from '@typedly/collection';
+```
+
+### `InferElementFromSettings`
+
+Type to infer the element type from collection settings or adapter.
+
+```typescript
+import { InferElementFromSettings } from '@typedly/collection';
+```
+
+### `InferElement`
+
+Type to infer the element type from collection settings or adapter, with special handling for common collection types like Set, Array, and Map.
+
+```typescript
+import { InferElement } from '@typedly/collection';
+```
+
+### Main
+
+### `AdaptableCollectionShape`
+
+The `AdaptableCollectionShape` interface defines a collection data structure that can adapt to different configurations and behaviors based on the provided adapter and settings.
+
+```typescript
+import { AdaptableCollectionShape } from '@typedly/collection';
 ```
 
 ### `CollectionSettings`
@@ -202,71 +214,18 @@ import { CollectionSettings } from '@typedly/collection';
 
 ### `CollectionShape`
 
-Represents a collection of elements.
+The `CollectionShape` interface defines the structure and behavior of a collection data structure, which can be implemented by various types of collections such as sets, arrays, or maps.
 
 ```typescript
 import { CollectionShape, IterValue } from '@typedly/collection';
+```
 
-// Example class implementing CollectionShape.
-export class AnyCollection<
-  E,
-  T = Set<E>
-> implements CollectionShape<E, T, false> {
-  get size(): number { return (this.#items as any).size; }
-  get value(): T { return this.#items; }
-  get [Symbol.toStringTag](): string { return 'AnyCollection'; }
+### `ConfigurableCollectionShape`
 
-  async = false as false;
+The shape of configurable collection data structure, which can be implemented by various types of collections such as sets, arrays, or maps.
 
-  #items: T;
-
-  constructor(
-    { async, value }: { async: false, value?: T },
-    type?: new (...args: any[]) => T,
-    ...elements: E[]
-  ) {
-    this.async = async;
-    this.#items = type ? new type() : value ? value : {} as T;
-    elements.forEach(element => (this.#items as any).add(element));
-  }
-
-  add(element: E): this { (this.#items as any).add(element); return this; }
-  clear(): this { return this; }
-  delete(element: E): boolean { return (this.#items as any).delete(element); }
-  destroy(): this { return this; }
-  forEach(callbackfn: (element: E, element2: E, collection: CollectionShape<E, T, false>) => void, thisArg?: any): this {
-    (this.#items as any).forEach((value: E) => callbackfn.call(thisArg, value, value, this));
-    return this;
-  }
-  has(element: E): boolean { return (this.#items as any).has(element); }
-  lock(): this { return this; }
-  getValue(): T { return this.#items; }
-  setValue(value: T): this { this.#items = value; return this; }
-  unlock(): this { return this; }
-  [Symbol.iterator](): IterableIterator<IterValue<T>> {
-    return (this.#items as any).values();
-  }
-}
-
-const obj1 = {age: 27};
-const obj2 = {age: 37};
-const obj3 = {age: 47};
-const anyCollection1 = new AnyCollection<{age: number}, Set<{age: number}>>(
-  { async: false, value: new Set([{age: 27}, {age: 37}, {age: 47}]) }
-  )
-  .add(obj1)
-  .add(obj2)
-  .add(obj3);
-
-console.log(`anyCollection1:`, anyCollection1.value);
-
-const anyCollection2 = new AnyCollection<{age: number}, Set<{age: number}>>(
-  { async: false }, Set)
-  .add(obj1)
-  .add(obj2)
-  .add(obj3);
-
-console.log(`anyCollection2:`, anyCollection2.value);
+```typescript
+import { ConfigurableCollectionShape } from '@typedly/collection';
 ```
 
 ## Contributing
@@ -332,7 +291,7 @@ How do I know when to release 1.0.0?
 
 ## License
 
-MIT © typedly ([license][typedly-license])
+MIT © typedly ([license][package-license])
 
 ## Packages
 
@@ -349,23 +308,29 @@ MIT © typedly ([license][typedly-license])
 - **[@typedly/regexp](https://github.com/typedly/regexp)**: A **TypeScript** type definitions package for `RegExp`.
 - **[@typedly/symbol](https://github.com/typedly/symbol)**: A **TypeScript** type definitions package for various symbols.
 
+<!-- Funding -->
+[github-badge-sponsor]: https://img.shields.io/static/v1?label=Sponsor&message=%E2%9D%A4&logo=GitHub&link=https://github.com/sponsors/angular-package
+[github-sponsor-link]: https://github.com/sponsors/angular-package
+[patreon-badge]: https://img.shields.io/endpoint.svg?url=https%3A%2F%2Fshieldsio-patreon.vercel.app%2Fapi%3Fusername%3Dangularpackage%26type%3Dpatrons&style=flat
+[patreon-link]: https://www.patreon.com/join/angularpackage/checkout?fan_landing=true&rid=0
+
 <!-- This package: typedly  -->
   <!-- GitHub: badges -->
-  [typedly-badge-issues]: https://img.shields.io/github/issues/typedly/collection
-  [typedly-badge-forks]: https://img.shields.io/github/forks/typedly/collection
-  [typedly-badge-stars]: https://img.shields.io/github/stars/typedly/collection
-  [typedly-badge-license]: https://img.shields.io/github/license/typedly/collection
+  [package-badge-issues]: https://img.shields.io/github/issues/typedly/collection
+  [package-badge-forks]: https://img.shields.io/github/forks/typedly/collection
+  [package-badge-stars]: https://img.shields.io/github/stars/typedly/collection
+  [package-badge-license]: https://img.shields.io/github/license/typedly/collection
   <!-- GitHub: badges links -->
-  [typedly-issues]: https://github.com/typedly/collection/issues
-  [typedly-forks]: https://github.com/typedly/collection/network
-  [typedly-license]: https://github.com/typedly/collection/blob/master/LICENSE
-  [typedly-stars]: https://github.com/typedly/collection/stargazers
+  [package-issues]: https://github.com/typedly/collection/issues
+  [package-forks]: https://github.com/typedly/collection/network
+  [package-license]: https://github.com/typedly/collection/blob/master/LICENSE
+  [package-stars]: https://github.com/typedly/collection/stargazers
 <!-- This package -->
 
 <!-- Package: typedly -->
   <!-- npm -->
-  [typedly-npm-badge-svg]: https://badge.fury.io/js/@typedly%2Fcollection.svg
-  [typedly-npm-badge]: https://badge.fury.io/js/@typedly%2Fcollection
+  [package-npm-badge-svg]: https://badge.fury.io/js/@typedly%2Fcollection.svg
+  [package-npm-badge]: https://badge.fury.io/js/@typedly%2Fcollection
 
 <!-- GIT -->
 [git-semver]: http://semver.org/
