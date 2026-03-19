@@ -2,7 +2,8 @@
 import { CollectionSettings } from "../../../lib";
 import { ConfigurableCollectionAdapter } from "../../../adapter";
 // Type.
-import { InferAsync, InferCollectionType, InferElement } from "../../../inference";
+import { InferCollectionType, InferElement } from "../../../inference";
+import { InferAsync } from "@typedly/data";
 /**
  * @description 
  * @export
