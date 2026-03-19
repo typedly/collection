@@ -10,9 +10,5 @@ import { InferElementFromSettings } from "./infer-element-from-settings.type";
  */
 export type InferElement<C, I = undefined, F = unknown> =
   InferElementFromSettings<C, F> extends F
-    ? I extends CollectionShape<any, infer E, any>
-      ? E extends Iterable<infer U>
-        ? U
-        : E
-      : F
+    ? I extends CollectionShape<any, infer E, any> ? E : F
     : InferElementFromSettings<C, F>;
