@@ -1,5 +1,5 @@
 // Interface.
-import { CollectionShape } from "../../../lib";
+import { CollectionShape } from "./collection.shape";
 // Type.
 import { ConstrainedConstructor } from "@typedly/constructor";
 /**
