@@ -1,10 +1,12 @@
 // Interface.
-import { AdaptableDataShape } from '@typedly/adaptable-data';
-import { CollectionSettings } from './collection.settings';
-import { ConfigurableCollectionAdapter } from '../../adapter';
-import { ConfigurableCollectionShape } from './configurable-collection.shape';
+import type { AdaptableDataShape } from '@typedly/adaptable-data';
+import type { CollectionSettings } from './collection.settings';
+import type { ConfigurableCollectionAdapter } from '../../adapter';
+import type { ConfigurableCollectionShape } from './configurable-collection.shape';
 // Type.
-import { InferAsync, InferCollectionType, InferElement } from '../../inference';
+import type { InferAsyncOf } from '@typedly/data';
+import type { InferCollectionType, InferElement } from '../../inference';
+import type { InferSettings } from '@typedly/configurable-data';
 /**
  * @description The `AdaptableCollectionShape` interface defines a collection data structure that can adapt to different configurations and behaviors based on the provided adapter and settings.
  * It extends both the `CollectionShape` and `AdaptableDataShape` interfaces, allowing it to inherit collection-specific functionalities while also supporting adaptability through the adapter pattern.
@@ -20,10 +22,10 @@ import { InferAsync, InferCollectionType, InferElement } from '../../inference';
  */
 export interface AdaptableCollectionShape<
   A extends ConfigurableCollectionAdapter<C, T, E, R>,
-  C extends CollectionSettings<T, E, R>,
+  C extends CollectionSettings<T, E, R> = InferSettings<A>,
   T extends Iterable<E> = InferCollectionType<C, A>,
   E = InferElement<C, A>,
-  R extends boolean = InferAsync<C, A>
+  R extends boolean = InferAsyncOf<[C, A]>
 > extends AdaptableDataShape<A, C, T, R>, ConfigurableCollectionShape<C, T, E, R> {
   /**
    * @description Updates the collection's configuration settings and returns a new collection instance with the updated settings.
