@@ -1,85 +1,37 @@
+import type { AsyncReturn, DataShape } from '@typedly/data';
 // Interface.
-import { AsyncReturn, DataShape } from '@typedly/data';
-import { CollectionSettings } from './collection.settings';
+import type { Collection as CollectionTrait } from '@typedly/data-traits';
+// Type.
+import type { IterableElement } from '@typedly/data';
 /**
- * @description Represents a collection of elements.
+ * @description The `CollectionShape` interface defines the structure and behavior of a collection data structure, which can be implemented by various types of collections such as sets, arrays, or maps.
+ * It extends the `DataShape` interface, allowing it to inherit common data-related properties and methods while also introducing collection-specific functionalities.
  * @export
- * @interface Collection
- * @template E The type of elements in the collection.
- * @template [T=any] The type of the value in the collection, data of elements.
- * @template {boolean} [R=false] The `boolean` type to determine async methods.
- * @extends {DataShape<T, R>}
+ * @interface CollectionShape
+ * @template {Iterable<E>} T The iterable collection type.
+ * @template [E=IterableElement<T>] The type of elements in the collection inferred from the `T` if possible.
+ * @template {boolean} [R=false] The async behavior flag.
+ * @extends {DataShape<T, R>} The data-related functionalities defined in `DataShape`.
+ * @extends {CollectionTrait<E, R>} The base collection functionalities defined in `CollectionTrait`.
  */
 export interface CollectionShape<
-  E,
-  T = any,
-  R extends boolean = false
-> extends DataShape<T, R> {
-  /**
-   * @description Indicates whether the collection operates in asynchronous mode.
-   * @readonly
-   * @type {R}
-   */
-  readonly async: R;
-
-  /**
-   * @description The configuration settings of the collection.
-   * @readonly
-   * @type {?CollectionSettings<E, T, R>}
-   */
-  readonly configuration?: CollectionSettings<E, T, R>;
-
-  /**
-   * @description The number of items in the collection.
-   * @returns {number}
-   */
-  readonly size: number;
-
-  /**
-   * @description Adds elements to the collection.
-   * @param {...E[]} element Element of type `T` to add.
-   * @returns {AsyncReturn<R, this>} The collection instance `this`, or in `Promise`.
-   */
-  add(...element: E[]): AsyncReturn<R, this>;
-
-  /**
-   * @description Deletes elements from the collection.
-   * @param {...E[]} element Element of type `T` to delete.
-   * @returns {AsyncReturn<R, boolean>} `true` if the element was successfully deleted, otherwise `false`.
-   */
-  delete(...element: E[]): AsyncReturn<R, boolean>;
-
+  T extends Iterable<E>,
+  E = IterableElement<T>,
+  R extends boolean = false,
+> extends DataShape<T, R>, CollectionTrait<E, R> {
   /**
    * @description Executes a provided function once for each collection element.
-   * @param {(value: E, value2: E, collection: CollectionShape<E, T, R>) => void} callbackfn Function to execute for each element.
-   * @param {AsyncReturn<R, this>} [thisArg] Value to use as `this` when executing `callbackfn`.
+   * @param {(element: E, collection: this) => void} callbackfn Function to execute for each element.
+   * @param {?*} [thisArg] Value to use as `this` when executing `callbackfn`.
+   * @returns {AsyncReturn<R, this>} 
    */
-  forEach(callbackfn: (element: E, element2: E, collection: CollectionShape<E, T, R>) => void, thisArg?: any): AsyncReturn<R, this>;
+  forEach(callbackfn: (element: E, collection: this) => void, thisArg?: any): AsyncReturn<R, this>;
 
   /**
-   * @description Checks if every item exists in the collection.
-   * @param {...E[]} element Element of type `T` to check for existence.
-   * @returns {AsyncReturn<R, boolean>} `true` if the element exists, otherwise `false`.
+   * @description Returns an iterable of the values in the collection.
+   * The type of the values is determined by the generic type `T`, which represents the iterable collection type.
+   * If `T` is not provided, it defaults to `Iterable<unknown>`, and the values will be of type `unknown`.
+   * @returns {IterableIterator<IterableElement<T>>} 
    */
-  has(...element: E[]): AsyncReturn<R, boolean>;
-
-  /**
-   * @description Sets the asynchronous mode of the collection.
-   * @param {R} async The boolean type to determine async methods.
-   * @returns {this} The collection instance `this`.
-   */
-  setAsync?(async: R): this;
-
-  /**
-   * @description Converts the collection to an array of elements.
-   * @returns {AsyncReturn<R, E[]>} The array of elements, or in `Promise` if `R` is `true`.
-   */
-  toArray?(): AsyncReturn<R, E[]>;
-
-  /**
-   * @description
-   * @param {R} async 
-   * @returns {CollectionShape<E, T, R>} 
-   */
-  with?(async: R): CollectionShape<E, T, R>;
+  [Symbol.iterator](): IterableIterator<IterableElement<T>>;
 }

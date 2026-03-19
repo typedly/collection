@@ -1,17 +1,13 @@
-import { AsyncReturn, IterValue } from "@typedly/data";
-import { CollectionAdapter, CollectionShape } from "../../lib";
-import { CollectionAdapterConstructor } from "../../public-api";
+import type { AsyncReturn, IterValue } from "@typedly/data";
+
+import type { CollectionAdapterConstructor, CollectionAdapter, CollectionShape } from '../../lib';
 
 export class ModeCollection<
-  A extends CollectionAdapter<E, T, R>,
-  E = A extends CollectionAdapter<infer E, any, any> ? E : unknown,
-  T = A extends CollectionAdapter<any, infer T, any> ? T : unknown,
-  R extends boolean = A extends CollectionAdapter<any, any, infer R> ? R : unknown
-> implements CollectionShape<
+  A extends CollectionAdapter<T, E, R>,
   E,
-  T,
-  R
-> {
+  T extends Iterable<E>,
+  R extends boolean
+> implements CollectionShape<T, E, R> {
   public get [Symbol.toStringTag](): string {
     return 'ModeCollection';
   }
@@ -29,16 +25,15 @@ export class ModeCollection<
   }
 
   #adapter: A;
-  #type: CollectionAdapterConstructor<E, T, R, A>;
+  #type: CollectionAdapterConstructor<A, E, T, R>;
 
   constructor(
     async: R,
-    adapter: CollectionAdapterConstructor<E, T, R, A>,
+    adapter: CollectionAdapterConstructor<A, E, T, R>,
     ...elements: E[]
   ) {
     this.#adapter = new adapter(...elements);
     this.#type = adapter;
-    this.#adapter.setAsync?.(async);
   }
 
   public add(element: E): AsyncReturn<R, this> {
@@ -68,8 +63,8 @@ export class ModeCollection<
   public has(element: E): AsyncReturn<R, boolean> {
     return this.#adapter.has(element);
   }
-  public forEach(callbackfn: (element: E, element2: E, collection: ModeCollection<A, E, T, R>) => void, thisArg?: any): AsyncReturn<R, this> {
-    this.#adapter.forEach((value: E) => callbackfn.call(thisArg, value, value, this));
+  public forEach(callbackfn: (element: E, collection: this) => void, thisArg?: any): AsyncReturn<R, this> {
+    this.#adapter.forEach((value: E) => callbackfn.call(thisArg, value, this));
     return this as AsyncReturn<R, this>;
   }
   public setValue(value: T): AsyncReturn<R, this> {
@@ -82,7 +77,7 @@ export class ModeCollection<
 
   public with<
     Async extends R,
-    A extends CollectionAdapter<E, T, Async>
+    A extends CollectionAdapter<T, E, Async>
   >(async: Async): ModeCollection<A, E, T, Async> {
     return new ModeCollection<A, E, T, Async>(
       async,
@@ -91,8 +86,8 @@ export class ModeCollection<
     );
   }
 
-  #getAdapterConstructor<Async extends R, A extends CollectionAdapter<E, T, Async>>(): CollectionAdapterConstructor<E, T, Async, A> {
-    return this.#type as unknown as CollectionAdapterConstructor<E, T, Async, A>;
+  #getAdapterConstructor<Async extends R, A extends CollectionAdapter<T, E, Async>>(): CollectionAdapterConstructor<A, E, T, Async> {
+    return this.#type as unknown as CollectionAdapterConstructor<A, E, T, Async>;
   }
 
   [Symbol.iterator](): IterableIterator<IterValue<T>> {

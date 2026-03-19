@@ -4,8 +4,8 @@ import { CollectionShape } from "../../lib";
 // Example class implementing CollectionShape.
 export class AnyCollection<
   E,
-  T = Set<E>
-> implements CollectionShape<E, T, false> {
+  T extends Iterable<E> = Set<E>
+> implements CollectionShape<T, E, false> {
   get size(): number { return (this.#items as any).size; }
   get value(): T { return this.#items; }
   get [Symbol.toStringTag](): string { return 'AnyCollection'; }
@@ -28,8 +28,8 @@ export class AnyCollection<
   clear(): this { return this; }
   delete(element: E): boolean { return (this.#items as any).delete(element); }
   destroy(): this { return this; }
-  forEach(callbackfn: (element: E, element2: E, collection: CollectionShape<E, T, false>) => void, thisArg?: any): this {
-    (this.#items as any).forEach((value: E) => callbackfn.call(thisArg, value, value, this));
+  forEach(callbackfn: (element: E, collection: this) => void, thisArg?: any): this {
+    (this.#items as any).forEach((value: E) => callbackfn.call(thisArg, value, this));
     return this;
   }
   has(element: E): boolean { return (this.#items as any).has(element); }

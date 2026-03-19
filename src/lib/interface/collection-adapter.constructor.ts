@@ -1,5 +1,5 @@
 // Interface.
-import { CollectionAdapter } from "../../../lib";
+import { CollectionAdapter } from "./collection.adapter";
 /**
  * @description The interface of adapter constructor.
  * @export
@@ -10,10 +10,10 @@ import { CollectionAdapter } from "../../../lib";
  * @template {CollectionAdapter<E, T, R>} [A=CollectionAdapter<E, T, R>] The adapter type. 
  */
 export interface CollectionAdapterConstructor<
+  A extends CollectionAdapter<T, E, R>,
   E,
-  T,
-  R extends boolean = false,
-  A extends CollectionAdapter<E, T, R> = CollectionAdapter<E, T, R>
+  T extends Iterable<E>,
+  R extends boolean
 > {
   new (...elements: E[]): A;
 }
