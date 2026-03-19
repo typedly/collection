@@ -1,6 +1,6 @@
 {
   "name": "@typedly/collection",
-  "version": "7.0.0",
+  "version": "6.0.0",
   "author": "wwwdev.io <dev@wwwdev.io>",
   "description": "A TypeScript type definitions package for data collections with customizable storage.",
   "license": "MIT",
