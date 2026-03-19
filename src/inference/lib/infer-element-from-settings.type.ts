@@ -8,9 +8,5 @@ import { CollectionSettings } from "../../lib";
  */
 export type InferElementFromSettings<C, F = unknown> =
   C extends CollectionSettings<infer T, infer E, any>
-    ? T extends Iterable<infer U>
-      ? U
-      : E
-    : C extends CollectionSettings<any, infer E, any>
-      ? E
-      : F;
+    ? T extends Iterable<infer U> ? U : E
+    : C extends CollectionSettings<any, infer E, any> ? E : F;
