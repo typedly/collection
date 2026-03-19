@@ -2,7 +2,8 @@
 import { CollectionSettings } from "../../lib";
 import { ConfigurableCollectionShape } from "../../lib/interface";
 // Type.
-import { InferAsync, InferCollectionType, InferElement } from "../../inference";
+import { InferCollectionType, InferElement } from "../../inference";
+import { InferAsync } from "@typedly/data";
 /**
  * @description The `ConfigurableCollectionAdapter` interface defines a adapter collection data structure that can be configured based on the provided settings.
  * It extends the `ConfigurableCollectionShape` interface, allowing it to inherit collection-specific functionalities while also supporting configurability through the settings pattern.
