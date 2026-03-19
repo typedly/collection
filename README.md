@@ -39,15 +39,14 @@ A **TypeScript** type definitions package for data collections with customizable
 - [Installation](#installation)
 - [Api](#api)
   - [Adapter](#adapter)
-    - [`CollectionAdapter`](#collectionadapter)
-  - [Constructor](#constructor)
     - [`CollectionAdapterConstructor`](#collectionadapterconstructor)
-    - [`CollectionConstructor`](#collectionconstructor)
+    - [`CollectionAdapter`](#collectionadapter)
   - [Inference](#inference)
     - [`InferCollectionType`](#infercollectiontype)
     - [`InferElementFromSettings`](#inferelementfromsettings)
     - [`InferElement`](#inferelement)
   - [Main](#main)
+    - [`CollectionConstructor`](#collectionconstructor)
     - [`CollectionSettings`](#collectionsettings)
     - [`CollectionShape`](#collectionshape)
 - [Contributing](#contributing)
@@ -117,22 +116,12 @@ The adapter interface for collections.
 import { CollectionAdapter } from '@typedly/collection';
 ```
 
-### Constructor
-
 ### `CollectionAdapterConstructor`
 
 The interface of adapter constructor.
 
 ```typescript
 import { CollectionAdapterConstructor } from '@typedly/collection';
-```
-
-### `CollectionConstructor`
-
-The constructor type for `CollectionShape`.
-
-```typescript
-import { CollectionConstructor } from '@typedly/collection';
 ```
 
 ### Inference
@@ -163,12 +152,12 @@ import { InferElement } from '@typedly/collection';
 
 ### Main
 
-### `AdaptableCollectionShape`
+### `CollectionConstructor`
 
-The `AdaptableCollectionShape` interface defines a collection data structure that can adapt to different configurations and behaviors based on the provided adapter and settings.
+The constructor type for `CollectionShape`.
 
 ```typescript
-import { AdaptableCollectionShape } from '@typedly/collection';
+import { CollectionConstructor } from '@typedly/collection';
 ```
 
 ### `CollectionSettings`
