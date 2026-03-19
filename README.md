@@ -38,19 +38,18 @@ A **TypeScript** type definitions package for data collections with customizable
 - [Related packages](#related-packages)
 - [Installation](#installation)
 - [Api](#api)
-  - Adapter
+  - [Adapter](#adapter)
     - [`CollectionAdapter`](#collectionadapter)
-    - [`ConfigurableCollectionAdapter`](#configurablecollectionadapter)
-  - Constructor
+  - [Constructor](#constructor)
     - [`CollectionAdapterConstructor`](#collectionadapterconstructor)
     - [`CollectionConstructor`](#collectionconstructor)
-    - [`ConfigurableCollectionAdapterConstructor`](#configurablecollectionadapterconstructor)
-    - [`ConfigurableCollectionConstructor`](#configurablecollectionconstructor)
-  - Main
-    - [`AdaptableCollection`](#adaptablecollectionshape)
+  - [Inference](#inference)
+    - [`InferCollectionType`](#infercollectiontype)
+    - [`InferElementFromSettings`](#inferelementfromsettings)
+    - [`InferElement`](#inferelement)
+  - [Main](#main)
     - [`CollectionSettings`](#collectionsettings)
     - [`CollectionShape`](#collectionshape)
-    - [`ConfigurableCollectionShape`](#configurablecollectionshape)
 - [Contributing](#contributing)
 - [Support](#support)
 - [Code of Conduct](#code-of-conduct)
@@ -72,6 +71,8 @@ A **TypeScript** type definitions package for data collections with customizable
 ### General
 
 - **[@typedly/adaptable-data](https://github.com/typedly/adaptable-data)**: A **TypeScript** type definitions for data adapter.
+- **[@typedly/adaptable-collection](https://github.com/typedly/adaptable-collection)**: 
+- **[@typedly/configurable-collection](https://github.com/typedly/configurable-collection)**: 
 - **[@typedly/collection](https://github.com/typedly/collection)**: A **TypeScript** type definitions package for data collections with customizable storage.
 - **[@typescript-package/data](https://github.com/typescript-package/data)**: A lightweight **TypeScript** library for basic data management.
 - **[@typescript-package/collection](https://github.com/typescript-package/collection)**: A lightweight **TypeScript** library for data collection.
@@ -88,26 +89,19 @@ npm install @typedly/collection --save-peer
 import {
   // Adapter.
   CollectionAdapter,
-  ConfigurableCollectionAdapter,
 
   // Constructor.
-  AdaptableCollectionConstructor,
   CollectionAdapterConstructor,
   CollectionConstructor,
-  ConfigurableCollectionConstructor,
-  ConfigurableCollectionAdapterConstructor,
 
   // Inference.
-  InferAsync,
   InferCollectionType,
   InferElementFromSettings,
   InferElement,
 
   // Interface.
-  AdaptableCollectionShape,
   CollectionSettings,
   CollectionShape,
-  ConfigurableCollectionShape,
 } from '@typedly/collection';
 ```
 
@@ -121,14 +115,6 @@ The adapter interface for collections.
 
 ```typescript
 import { CollectionAdapter } from '@typedly/collection';
-```
-
-### `ConfigurableCollectionAdapter`
-
-The `ConfigurableCollectionAdapter` interface defines a adapter collection data structure that can be configured based on the provided settings.
-
-```typescript
-import { ConfigurableCollectionAdapter } from '@typedly/collection';
 ```
 
 ### Constructor
@@ -149,27 +135,7 @@ The constructor type for `CollectionShape`.
 import { CollectionConstructor } from '@typedly/collection';
 ```
 
-### `ConfigurableCollectionAdapterConstructor`
-
-```typescript
-import { ConfigurableCollectionAdapterConstructor } from '@typedly/collection';
-```
-
-### `ConfigurableCollectionConstructor`
-
-```typescript
-import { ConfigurableCollectionConstructor } from '@typedly/collection';
-```
-
 ### Inference
-
-### `InferAsync`
-
-Infer the async type from the collection settings or adapter.
-
-```typescript
-import { InferAsync } from '@typedly/collection';
-```
 
 ### `InferCollectionType`
 
@@ -219,14 +185,6 @@ The `CollectionShape` interface defines the structure and behavior of a collecti
 
 ```typescript
 import { CollectionShape } from '@typedly/collection';
-```
-
-### `ConfigurableCollectionShape`
-
-The shape of configurable collection data structure, which can be implemented by various types of collections such as sets, arrays, or maps.
-
-```typescript
-import { ConfigurableCollectionShape } from '@typedly/collection';
 ```
 
 ## Contributing
