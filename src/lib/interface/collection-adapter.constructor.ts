@@ -1,5 +1,5 @@
 // Interface.
-import { CollectionAdapter } from "../../../adapter";
+import { CollectionAdapter } from "./collection.adapter";
 /**
  * @description The interface of adapter constructor.
  * @export
