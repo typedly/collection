@@ -2,7 +2,8 @@
 import { CollectionSettings, ConfigurableCollectionShape } from "../../../lib";
 // Type.
 import { ConstrainedConstructor } from "@typedly/constructor";
-import { InferAsync, InferCollectionType, InferElement } from "../../../inference/lib";
+import { InferCollectionType, InferElement } from "../../../inference";
+import { InferAsync } from "@typedly/data";
 /**
  * @description The constructor type for `ConfigurableCollection`.
  * @export
