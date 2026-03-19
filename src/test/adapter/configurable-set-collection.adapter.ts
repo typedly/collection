@@ -1,6 +1,5 @@
 import { AsyncReturn, IterValue } from '@typedly/data';
-import { CollectionAdapter } from "../../adapter";
-import { CollectionSettings } from "../../lib";
+import { CollectionAdapter, CollectionSettings } from "../../lib";
 
 export class ConfigurableSetCollectionAdapter<
   E,

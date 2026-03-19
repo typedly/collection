@@ -2,9 +2,9 @@ import { AsyncReturn, IterableElement } from '@typedly/data';
 // Shape.
 import { CollectionShape } from "../../lib";
 // Constructor.
-import { CollectionAdapterConstructor } from "../../constructor";
+import { CollectionAdapterConstructor } from "../../lib";
 // Adapter.
-import { CollectionAdapter } from '../../adapter';
+import { CollectionAdapter } from '../../lib';
 
 export abstract class CollectionBase<
   E,

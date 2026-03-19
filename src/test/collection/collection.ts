@@ -1,5 +1,5 @@
-import { CollectionAdapter } from "../../adapter";
-import { CollectionAdapterConstructor } from "../../constructor";
+import { CollectionAdapter } from "../../lib";
+import { CollectionAdapterConstructor } from "../../lib";
 import { InferElement } from "../../inference/lib";
 import { CollectionBase } from './collection.base';
 // 

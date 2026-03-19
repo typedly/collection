@@ -1,8 +1,6 @@
-import { AsyncReturn, IterValue } from "@typedly/data";
+import type { AsyncReturn, IterValue } from "@typedly/data";
 
-import type { CollectionAdapter } from '../../adapter';
-import type { CollectionShape } from "../../lib";
-import type { CollectionAdapterConstructor } from "../../public-api";
+import type { CollectionAdapterConstructor, CollectionAdapter, CollectionShape } from '../../lib';
 
 export class ModeCollection<
   A extends CollectionAdapter<T, E, R>,

@@ -1,5 +1,5 @@
 import { AsyncReturn, IterValue } from '@typedly/data';
-import { CollectionAdapter } from "../../adapter";
+import { CollectionAdapter } from "../../lib";
 
 export class SetCollectionAdapter<
   E,

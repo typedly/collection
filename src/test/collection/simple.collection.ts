@@ -1,7 +1,5 @@
 
-import { CollectionAdapterConstructor } from "../../constructor/lib";
-import { CollectionAdapter } from "../../adapter";
-
+import { CollectionAdapter, CollectionAdapterConstructor } from "../../lib";
 import { CollectionBase } from './collection.base';
 
 // All generic are captured from the adapter constructor.
