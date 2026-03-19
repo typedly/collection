@@ -1,26 +1,17 @@
 /*
  * Public API Surface of collection
  */
-export type {
-  CollectionAdapter,
-  ConfigurableCollectionAdapter,
-} from './adapter';
-export type {
-  AdaptableCollectionConstructor,
-  CollectionAdapterConstructor,
-  CollectionConstructor,
-  ConfigurableCollectionConstructor,
-  ConfigurableCollectionAdapterConstructor,
-} from './constructor';
+
 export type {
   InferCollectionType,
-  InferElementFromSettings,
   InferElement,
+  InferElementFromSettings,
 } from './inference';
+
 export type {
-  // Interface.
-  AdaptableCollectionShape,
+  CollectionAdapter,
+  CollectionAdapterConstructor,
+  CollectionConstructor,
   CollectionSettings,
   CollectionShape,
-  ConfigurableCollectionShape,
 } from './lib';
