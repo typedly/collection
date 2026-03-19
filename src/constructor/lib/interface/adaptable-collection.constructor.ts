@@ -3,7 +3,8 @@ import { ConfigurableCollectionAdapter } from "../../../adapter";
 import { AdaptableCollectionShape, CollectionSettings } from "../../../lib";
 // Type.
 import { ConstrainedConstructor } from "@typedly/constructor";
-import { InferAsync, InferCollectionType, InferElementFromSettings } from "../../../inference";
+import { InferCollectionType, InferElementFromSettings } from "../../../inference";
+import { InferAsync } from "@typedly/data";
 /**
  * @description
  * @export
