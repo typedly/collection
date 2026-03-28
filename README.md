@@ -62,8 +62,6 @@ A **TypeScript** type definitions package for data collections with customizable
 
 ### Peer dependencies
 
-- **[@typedly/adaptable-data](https://github.com/typedly/adaptable-data)**: A **TypeScript** type definitions package for configurable, composable, trait-driven adaptable data models with adapter support.
-- **[@typedly/configurable-data](https://github.com/typedly/configurable-data)**: A **TypeScript** type definitions package for configurable, composable, trait-driven data models.
 - **[@typedly/data-traits](https://github.com/typedly/data-traits)**: A **TypeScript** type definitions package for configurable data traits, providing various kinds of configurable data interfaces.
 - **[@typedly/data](https://github.com/typedly/data)**: A **TypeScript** type definitions for [`@typescript-package/data`](https://github.com/typedly/data).
 
