@@ -2,6 +2,7 @@
 export type {
   CollectionAdapter,
   CollectionAdapterConstructor,
+  CollectionConfig,
   CollectionConstructor,
   CollectionSettings,
   CollectionShape,

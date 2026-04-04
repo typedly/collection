@@ -46,6 +46,7 @@ A **TypeScript** type definitions package for data collections with customizable
     - [`InferElementFromSettings`](#inferelementfromsettings)
     - [`InferElement`](#inferelement)
   - [Main](#main)
+    - [`CollectionConfig`](#collectionconfig)
     - [`CollectionConstructor`](#collectionconstructor)
     - [`CollectionSettings`](#collectionsettings)
     - [`CollectionShape`](#collectionshape)
@@ -99,6 +100,9 @@ import {
   // Interface.
   CollectionSettings,
   CollectionShape,
+
+  // Type
+  CollectionConfig,
 } from '@typedly/collection';
 ```
 
@@ -149,6 +153,14 @@ import { InferElement } from '@typedly/collection';
 ```
 
 ### Main
+
+### `CollectionConfig`
+
+The configuration type for collections, which extends the generic `DataConfig` type from `@typedly/data` with specific parameters related to collection settings, collection type, element type, and async behavior.
+
+```typescript
+import { CollectionConfig } from '@typedly/collection';
+```
 
 ### `CollectionConstructor`
 
