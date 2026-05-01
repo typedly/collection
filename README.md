@@ -40,12 +40,13 @@ A **TypeScript** type definitions package for data collections with customizable
 - [Api](#api)
   - [Adapter](#adapter)
     - [`CollectionAdapterConstructor`](#collectionadapterconstructor)
-    - [`CollectionAdapter`](#collectionadapter)
+    - [`CollectionAdapterShape`](#collectionadaptershape)
   - [Inference](#inference)
     - [`InferCollectionType`](#infercollectiontype)
     - [`InferElementFromSettings`](#inferelementfromsettings)
     - [`InferElement`](#inferelement)
   - [Main](#main)
+    - [`CacheableCollectionSettings`](#cacheablecollectionsettings)
     - [`CollectionConfig`](#collectionconfig)
     - [`CollectionConstructor`](#collectionconstructor)
     - [`CollectionSettings`](#collectionsettings)
@@ -84,25 +85,24 @@ npm install @typedly/collection --save-peer
 ## Api
 
 ```typescript
-import {
-  // Adapter.
-  CollectionAdapter,
-
-  // Constructor.
-  CollectionAdapterConstructor,
-  CollectionConstructor,
-
-  // Inference.
+import type {
+  // Inference
   InferCollectionType,
-  InferElementFromSettings,
   InferElement,
+  InferElementFromSettings,
 
-  // Interface.
+  // Adapter
+  CollectionAdapterConstructor,
+  CollectionAdapterShape,
+
+  // Configuration
+  CacheableCollectionSettings,
+  CollectionConfig,
+
+  // Collection
+  CollectionConstructor,
   CollectionSettings,
   CollectionShape,
-
-  // Type
-  CollectionConfig,
 } from '@typedly/collection';
 ```
 
@@ -110,12 +110,12 @@ import {
 
 ### Adapter
 
-### `CollectionAdapter`
+### `CollectionAdapterShape`
 
 The adapter interface for collections.
 
 ```typescript
-import { CollectionAdapter } from '@typedly/collection';
+import { CollectionAdapterShape } from '@typedly/collection';
 ```
 
 ### `CollectionAdapterConstructor`
@@ -153,6 +153,14 @@ import { InferElement } from '@typedly/collection';
 ```
 
 ### Main
+
+### `CacheableCollectionSettings`
+
+The `CacheableCollectionSettings` interface defines the settings for a cacheable collection, extending both `CollectionSettings` and `CacheableSettings`.
+
+```typescript
+import { CacheableCollectionSettings } from '@typedly/collection';
+```
 
 ### `CollectionConfig`
 
