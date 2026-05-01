@@ -1,19 +1,20 @@
-// Interface.
-import { CollectionAdapter } from "./collection.adapter";
+// Interface & Type.
+import { IterableElement } from "@typedly/data";
+import { CollectionAdapterShape } from "./collection-adapter.shape";
 /**
  * @description The interface of adapter constructor.
  * @export
  * @interface CollectionAdapterConstructor
- * @template E Elements type of `T`.
- * @template T Value type under which the elements are stored.
- * @template {boolean} [R=false] The boolean type indicates the async methods.
- * @template {CollectionAdapter<E, T, R>} [A=CollectionAdapter<E, T, R>] The adapter type. 
+ * @template {CollectionAdapterShape<T, E, S> | undefined} A 
+ * @template {Iterable<E>} T Value type under which the elements are stored.
+ * @template [E=IterableElement<T>] Elements type of `T`.
+ * @template {boolean} [S=false] The boolean type indicates the async methods.
  */
 export interface CollectionAdapterConstructor<
-  A extends CollectionAdapter<T, E, R>,
-  E,
+  A extends CollectionAdapterShape<T, E, S> | undefined,
   T extends Iterable<E>,
-  R extends boolean
+  E = IterableElement<T>,
+  S extends boolean = false
 > {
   new (...elements: E[]): A;
 }

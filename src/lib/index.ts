@@ -1,8 +1,14 @@
 // Interface.
 export type {
-  CollectionAdapter,
+  // Adapter
   CollectionAdapterConstructor,
+  CollectionAdapterShape,
+
+  // Configuration
+  CacheableCollectionSettings,
   CollectionConfig,
+
+  // Collection
   CollectionConstructor,
   CollectionSettings,
   CollectionShape,

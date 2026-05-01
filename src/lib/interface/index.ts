@@ -1,4 +1,5 @@
-export type { CollectionAdapter } from './collection.adapter';
+export type { CacheableCollectionSettings } from './cacheable.collection.settings';
+export type { CollectionAdapterShape } from './collection-adapter.shape';
 export type { CollectionAdapterConstructor } from './collection-adapter.constructor';
 export type { CollectionConfig } from './collection.config';
 export type { CollectionConstructor } from './collection.constructor';
