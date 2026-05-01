@@ -24,10 +24,10 @@ import { CollectionShape } from "./collection.shape";
  *  // Implement the methods defined in CollectionShape... 
  * }
  */
-export interface CollectionAdapter<
+export interface CollectionAdapterShape<
   T extends Iterable<E>,
   E = IterableElement<T>,
-  R extends boolean = false,
-> extends CollectionShape<T, E, R> {
+  S extends boolean = false,
+> extends CollectionShape<T, E, S> {
   readonly version: string;
 }
