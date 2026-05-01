@@ -9,7 +9,7 @@
     "registry": "https://registry.npmjs.org"
   },
   "peerDependencies": {
-    "@typedly/data": "^6.1.0",
+    "@typedly/data": "^6.2.0",
     "@typedly/data-traits": "^2.0.0"
   },
   "scripts": {
