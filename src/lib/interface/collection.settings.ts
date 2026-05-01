@@ -6,14 +6,16 @@ import { DataSettings, IterableElement } from "@typedly/data";
  * @interface CollectionSettings
  * @template {Iterable<E>} T The iterable type of the value in the collection.
  * @template [E=IterableElement<T>] The type of the elements in the collection inferred from the `T` if possible.
- * @template {boolean} [R=false] The `boolean` type to determine async methods.
- * @extends {DataSettings<R>} The base settings for data.
+ * @template {boolean} [S=false] The `boolean` type to determine async methods.
+ * @extends {DataSettings<S>} The base settings for data.
+ * @see {@link IterableElement}
+ * @see {@link DataSettings}
  */
 export interface CollectionSettings<
   T extends Iterable<E>,
   E = IterableElement<T>,
-  R extends boolean = false
-> extends DataSettings<R> {
+  S extends boolean = false
+> extends DataSettings<S> {
   /**
    * @description The initial value of the collection. The type of the value is determined by the generic type `T`. If not provided, it defaults to `undefined`.
    * @type {?T}

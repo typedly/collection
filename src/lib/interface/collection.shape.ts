@@ -10,22 +10,24 @@ import type { IterableElement } from '@typedly/data';
  * @interface CollectionShape
  * @template {Iterable<E>} T The iterable collection type.
  * @template [E=IterableElement<T>] The type of elements in the collection inferred from the `T` if possible.
- * @template {boolean} [R=false] The async behavior flag.
- * @extends {DataShape<T, R>} The data-related functionalities defined in `DataShape`.
- * @extends {CollectionTrait<E, R>} The base collection functionalities defined in `CollectionTrait`.
+ * @template {boolean} [S=false] The async behavior flag.
+ * @extends {DataShape<T, S>} The data-related functionalities defined in `DataShape`.
+ * @extends {CollectionTrait<E, S>} The base collection functionalities defined in `CollectionTrait`.
+ * @see {@link IterableElement}
+ * @see {@link DataShape}
  */
 export interface CollectionShape<
   T extends Iterable<E>,
   E = IterableElement<T>,
-  R extends boolean = false,
-> extends DataShape<T, R>, CollectionTrait<E, R> {
+  S extends boolean = false,
+> extends DataShape<T, S>, CollectionTrait<E, S> {
   /**
    * @description Executes a provided function once for each collection element.
    * @param {(element: E, collection: this) => void} callbackfn Function to execute for each element.
    * @param {?*} [thisArg] Value to use as `this` when executing `callbackfn`.
-   * @returns {AsyncReturn<R, this>} 
+   * @returns {AsyncReturn<S, this>} 
    */
-  forEach(callbackfn: (element: E, collection: this) => void, thisArg?: any): AsyncReturn<R, this>;
+  forEach(callbackfn: (element: E, collection: this) => void, thisArg?: any): AsyncReturn<S, this>;
 
   /**
    * @description Returns an iterable of the values in the collection.
