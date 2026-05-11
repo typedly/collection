@@ -1,6 +1,6 @@
 {
   "name": "@typedly/collection",
-  "version": "7.0.0",
+  "version": "8.0.0",
   "author": "wwwdev.io <dev@wwwdev.io>",
   "description": "A TypeScript type definitions package for data collections with customizable storage.",
   "license": "MIT",
@@ -10,7 +10,8 @@
   },
   "peerDependencies": {
     "@typedly/data": "^6.2.0",
-    "@typedly/data-traits": "^2.0.0"
+    "@typedly/data-traits": "^2.0.0",
+    "@typedly/iterable": "^1.1.0"
   },
   "scripts": {
     "prepublishOnly": "npm install rimraf && npm run pkg && npm run clean",

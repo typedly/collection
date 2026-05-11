@@ -1,19 +1,20 @@
 // Type.
-import { DataSettings, IterableElement } from "@typedly/data";
+import type { AnyIterable, AnyIterableElement } from "@typedly/iterable";
+import type { DataSettings } from "@typedly/data";
 /**
  * @description Represents the settings for a collection.
  * @export
  * @interface CollectionSettings
- * @template {Iterable<E>} T The iterable type of the value in the collection.
- * @template [E=IterableElement<T>] The type of the elements in the collection inferred from the `T` if possible.
+ * @template {AnyIterable<E>} T The iterable type of the value in the collection.
+ * @template [E=AnyIterableElement<T>] The type of the elements in the collection inferred from the `T` if possible.
  * @template {boolean} [S=false] The `boolean` type to determine async methods.
  * @extends {DataSettings<S>} The base settings for data.
- * @see {@link IterableElement}
+ * @see {@link AnyIterableElement}
  * @see {@link DataSettings}
  */
 export interface CollectionSettings<
-  T extends Iterable<E>,
-  E = IterableElement<T>,
+  T extends AnyIterable<E>,
+  E = AnyIterableElement<T>,
   S extends boolean = false
 > extends DataSettings<S> {
   /**
@@ -103,7 +104,14 @@ export interface CollectionSettings<
   name?: string;
 
   /**
-   * @description Function to validate elements before adding
+   * @description The constructor function for the collection type. This allows for specifying a custom collection type that can be instantiated with the provided settings. If not provided, it defaults to `undefined`, indicating that a default collection type will be used.
+   * @type {?new (...args: any[]) => T}
+   */
+  type?: new (...args: any[]) => T;
+
+  /**
+   * @description Function to validate elements before adding them to the collection. If the function returns `true`, the element is considered valid and can be added. If it returns `false`, the element is considered invalid and will not be added. If not provided, it defaults to `undefined`, indicating no validation.
+   * @type {?(element: E) => boolean}
    */
   validator?: (element: E) => boolean;
 }
