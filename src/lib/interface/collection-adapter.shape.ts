@@ -1,20 +1,19 @@
-// Type.
-import { IterableElement } from "@typedly/data";
 // Interface.
-import { CollectionShape } from "./collection.shape";
+import type { CollectionShape } from "./collection.shape";
+import type { AnyIterable, AnyIterableElement } from "@typedly/iterable";
 /**
  * @description The adapter interface for collections.
  * @export
  * @interface CollectionAdapter
- * @template {Iterable<E>} T The type of the collection.
- * @template [E=IterableElement<T>] The type of elements in the collection.
+ * @template {AnyIterable<E>} T The type of the collection.
+ * @template [E=AnyIterableElement<T>] The type of elements in the collection.
  * @template {boolean} [R=false] The async behavior flag.
  * @extends {CollectionShape<T, E, R>} The collection shape interface.
  * @since 
  * @version 
  * @author Ścibor Rudnicki <sciborrudnicki@wvvw.dev>
  * @see {@link CollectionShape}
- * @see {@link IterableElement}
+ * @see {@link AnyIterableElement}
  * @example
  * ```ts
  * import { CollectionAdapter } from "@typedly/collection";
@@ -25,8 +24,8 @@ import { CollectionShape } from "./collection.shape";
  * }
  */
 export interface CollectionAdapterShape<
-  T extends Iterable<E>,
-  E = IterableElement<T>,
+  T extends AnyIterable<E>,
+  E = AnyIterableElement<T>,
   S extends boolean = false,
 > extends CollectionShape<T, E, S> {
   readonly version: string;

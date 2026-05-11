@@ -2,23 +2,23 @@ import type { AsyncReturn, DataShape } from '@typedly/data';
 // Interface.
 import type { Collection as CollectionTrait } from '@typedly/data-traits';
 // Type.
-import type { IterableElement } from '@typedly/data';
+import type { AnyIterableElement, IterableElement, AnyIterable } from '@typedly/iterable';
 /**
  * @description The `CollectionShape` interface defines the structure and behavior of a collection data structure, which can be implemented by various types of collections such as sets, arrays, or maps.
  * It extends the `DataShape` interface, allowing it to inherit common data-related properties and methods while also introducing collection-specific functionalities.
  * @export
  * @interface CollectionShape
- * @template {Iterable<E>} T The iterable collection type.
- * @template [E=IterableElement<T>] The type of elements in the collection inferred from the `T` if possible.
+ * @template {AnyIterable<E>} T The iterable collection type.
+ * @template [E=AnyIterableElement<T>] The type of elements in the collection inferred from the `T` if possible.
  * @template {boolean} [S=false] The async behavior flag.
  * @extends {DataShape<T, S>} The data-related functionalities defined in `DataShape`.
  * @extends {CollectionTrait<E, S>} The base collection functionalities defined in `CollectionTrait`.
- * @see {@link IterableElement}
+ * @see {@link AnyIterableElement}
  * @see {@link DataShape}
  */
 export interface CollectionShape<
-  T extends Iterable<E>,
-  E = IterableElement<T>,
+  T extends AnyIterable<E>,
+  E = AnyIterableElement<T>,
   S extends boolean = false,
 > extends DataShape<T, S>, CollectionTrait<E, S> {
   /**
