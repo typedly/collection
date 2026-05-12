@@ -11,7 +11,7 @@
   "peerDependencies": {
     "@typedly/data": "^6.2.0",
     "@typedly/data-traits": "^2.0.0",
-    "@typedly/iterable": "^1.1.0"
+    "@typedly/iterable": "^1.2.0"
   },
   "scripts": {
     "prepublishOnly": "npm install rimraf && npm run pkg && npm run clean",
